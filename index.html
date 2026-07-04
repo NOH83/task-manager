@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>업무 관리 시스템</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f5f3;
+    --surface: #ffffff;
+    --surface-2: #fafaf9;
+    --border: #e5e5e3;
+    --border-strong: #d0d0ce;
+    --text: #1a1a18;
+    --text-sub: #6b6b68;
+    --text-muted: #9b9b97;
+    --accent: #2563eb;
+    --accent-bg: #eff6ff;
+    --accent-text: #1d4ed8;
+    --danger: #dc2626;
+    --danger-bg: #fef2f2;
+    --danger-text: #b91c1c;
+    --warning: #d97706;
+    --warning-bg: #fffbeb;
+    --warning-text: #b45309;
+    --success: #16a34a;
+    --success-bg: #f0fdf4;
+    --success-text: #15803d;
+    --radius: 8px;
+    --radius-lg: 12px;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 16px; }
+  body {
+    font-family: 'Noto Sans KR', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 2rem 1rem;
+  }
+
+  .container { max-width: 720px; margin: 0 auto; }
+
+  /* Header */
+  .app-header {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    margin-bottom: 2rem;
+  }
+  .app-title { font-size: 22px; font-weight: 600; letter-spacing: -0.02em; }
+  .app-date { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
+  .sync-btn {
+    display: flex; align-items: center; gap: 6px;
+    padding: 8px 14px; border-radius: var(--radius);
+    border: 1px solid var(--border-strong);
+    background: var(--surface); color: var(--text-sub);
+    font-family: inherit; font-size: 13px; cursor: pointer;
+    transition: background 0.1s;
+  }
+  .sync-btn:hover { background: var(--surface-2); }
+  .sync-btn svg { width: 15px; height: 15px; flex-shrink: 0; }
+
+  /* Stats */
+  .stats {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 10px; margin-bottom: 1.5rem;
+  }
+  .stat {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); padding: 14px 16px;
+  }
+  .stat-label { font-size: 12px; color: var(--text-muted); margin-bottom: 6px; }
+  .stat-num { font-size: 26px; font-weight: 600; letter-spacing: -0.03em; }
+  .stat-num.c-danger { color: var(--danger); }
+  .stat-num.c-warning { color: var(--warning); }
+  .stat-num.c-success { color: var(--success); }
+
+  /* Add form */
+  .add-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); padding: 1rem 1.25rem;
+    margin-bottom: 1.25rem;
+  }
+  .add-card-title { font-size: 13px; font-weight: 500; color: var(--text-sub); margin-bottom: 10px; }
+  .add-row { display: flex; gap: 8px; }
+  .add-row input[type="text"] {
+    flex: 1; height: 38px;
+    border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 0 12px; font-size: 14px; font-family: inherit;
+    background: var(--surface-2); color: var(--text);
+    outline: none; transition: border-color 0.15s;
+  }
+  .add-row input[type="text"]:focus { border-color: var(--accent); background: #fff; }
+  .add-row input[type="text"]::placeholder { color: var(--text-muted); }
+  .add-row input[type="date"] {
+    height: 38px; border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 0 10px; font-size: 13px; font-family: inherit;
+    background: var(--surface-2); color: var(--text);
+    outline: none; width: 148px;
+  }
+  .add-row input[type="date"]:focus { border-color: var(--accent); }
+  .add-btn {
+    height: 38px; padding: 0 16px;
+    background: var(--accent); color: #fff;
+    border: none; border-radius: var(--radius);
+    font-family: inherit; font-size: 14px; font-weight: 500;
+    cursor: pointer; transition: opacity 0.1s; white-space: nowrap;
+  }
+  .add-btn:hover { opacity: 0.9; }
+
+  /* Filter tabs */
+  .filter-tabs {
+    display: flex; gap: 4px; margin-bottom: 10px;
+  }
+  .tab-btn {
+    padding: 5px 12px; border-radius: 99px;
+    border: 1px solid transparent;
+    background: none; color: var(--text-muted);
+    font-family: inherit; font-size: 13px; cursor: pointer;
+    transition: all 0.1s;
+  }
+  .tab-btn.active {
+    background: var(--surface); border-color: var(--border-strong);
+    color: var(--text);
+  }
+
+  /* Task list */
+  .task-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 1.5rem; }
+  .task-item {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); padding: 12px 14px;
+    display: flex; align-items: center; gap: 10px;
+    transition: border-color 0.15s, opacity 0.2s;
+    animation: slideIn 0.18s ease;
+  }
+  @keyframes slideIn { from { opacity:0; transform: translateY(-4px); } to { opacity:1; transform: none; } }
+  .task-item:hover { border-color: var(--border-strong); }
+  .task-item.done { opacity: 0.55; }
+  .task-item.done .task-name { text-decoration: line-through; color: var(--text-muted); }
+
+  .check-btn {
+    width: 20px; height: 20px; border-radius: 50%;
+    border: 1.5px solid var(--border-strong);
+    background: none; cursor: pointer; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s; color: transparent;
+  }
+  .check-btn.checked { background: var(--success); border-color: var(--success); color: #fff; }
+  .check-btn svg { width: 11px; height: 11px; }
+
+  .priority-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .dot-danger { background: var(--danger); }
+  .dot-warning { background: var(--warning); }
+  .dot-success { background: var(--success); }
+  .dot-neutral { background: var(--border-strong); }
+
+  .task-body { flex: 1; min-width: 0; }
+  .task-name { font-size: 14px; font-weight: 400; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .task-due { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+  .badge {
+    font-size: 11px; font-weight: 500;
+    padding: 2px 8px; border-radius: 99px; flex-shrink: 0;
+  }
+  .badge-danger { background: var(--danger-bg); color: var(--danger-text); }
+  .badge-warning { background: var(--warning-bg); color: var(--warning-text); }
+  .badge-success { background: var(--success-bg); color: var(--success-text); }
+  .badge-neutral { background: var(--surface-2); color: var(--text-muted); border: 1px solid var(--border); }
+
+  .del-btn {
+    background: none; border: none; cursor: pointer;
+    color: var(--text-muted); padding: 4px; border-radius: 4px;
+    display: flex; align-items: center; transition: color 0.1s;
+  }
+  .del-btn:hover { color: var(--danger); }
+  .del-btn svg { width: 15px; height: 15px; }
+
+  .empty-state {
+    text-align: center; padding: 2.5rem 1rem;
+    color: var(--text-muted); font-size: 14px;
+    background: var(--surface); border: 1px dashed var(--border);
+    border-radius: var(--radius-lg);
+  }
+  .empty-state p:first-child { font-size: 24px; margin-bottom: 8px; }
+
+  /* Google Sheets modal */
+  .modal-backdrop {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.35);
+    display: none; align-items: center; justify-content: center;
+    z-index: 100;
+  }
+  .modal-backdrop.open { display: flex; }
+  .modal {
+    background: var(--surface); border-radius: var(--radius-lg);
+    padding: 1.5rem; width: 90%; max-width: 460px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+  }
+  .modal-title { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+  .modal-sub { font-size: 13px; color: var(--text-sub); margin-bottom: 1rem; line-height: 1.5; }
+  .modal label { font-size: 13px; font-weight: 500; display: block; margin-bottom: 5px; }
+  .modal input[type="text"] {
+    width: 100%; height: 38px; border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 0 12px;
+    font-size: 13px; font-family: inherit; color: var(--text);
+    background: var(--surface-2); outline: none; margin-bottom: 12px;
+  }
+  .modal input[type="text"]:focus { border-color: var(--accent); background: #fff; }
+  .modal-hint { font-size: 12px; color: var(--text-muted); margin-bottom: 1.25rem; line-height: 1.6; }
+  .modal-hint code { background: var(--surface-2); border: 1px solid var(--border); padding: 1px 5px; border-radius: 4px; font-family: monospace; font-size: 11px; }
+  .modal-actions { display: flex; gap: 8px; justify-content: flex-end; }
+  .btn-cancel {
+    padding: 8px 16px; border: 1px solid var(--border-strong);
+    border-radius: var(--radius); background: none;
+    font-family: inherit; font-size: 13px; cursor: pointer; color: var(--text-sub);
+  }
+  .btn-save {
+    padding: 8px 16px; border: none;
+    border-radius: var(--radius); background: var(--accent); color: #fff;
+    font-family: inherit; font-size: 13px; font-weight: 500; cursor: pointer;
+  }
+
+  /* Toast */
+  .toast {
+    position: fixed; bottom: 24px; right: 24px;
+    background: var(--text); color: #fff;
+    padding: 10px 18px; border-radius: var(--radius);
+    font-size: 13px; z-index: 200;
+    opacity: 0; transform: translateY(8px);
+    transition: all 0.2s; pointer-events: none;
+  }
+  .toast.show { opacity: 1; transform: none; }
+
+  /* Google Sheets guide */
+  .guide-card {
+    background: var(--accent-bg); border: 1px solid #bfdbfe;
+    border-radius: var(--radius-lg); padding: 1rem 1.25rem;
+    font-size: 13px; color: var(--accent-text); line-height: 1.7;
+  }
+  .guide-card strong { font-weight: 600; display: block; margin-bottom: 6px; font-size: 14px; }
+  .guide-card ol { padding-left: 1.2rem; }
+  .guide-card li { margin-bottom: 3px; }
+  .guide-card code { background: #dbeafe; padding: 1px 5px; border-radius: 3px; font-family: monospace; font-size: 12px; }
+
+  @media (max-width: 520px) {
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .add-row { flex-wrap: wrap; }
+    .add-row input[type="date"] { width: 100%; }
+    .add-btn { width: 100%; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="app-header">
+    <div>
+      <div class="app-title">업무 관리</div>
+      <div class="app-date" id="today-label"></div>
+    </div>
+    <button class="sync-btn" onclick="openModal()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M4 9h16M4 14h16M9 4v16"/></svg>
+      구글 시트 연동
+    </button>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="stat-label">전체 업무</div><div class="stat-num" id="s-total">0</div></div>
+    <div class="stat"><div class="stat-label">오늘 마감</div><div class="stat-num c-danger" id="s-today">0</div></div>
+    <div class="stat"><div class="stat-label">이번 주</div><div class="stat-num c-warning" id="s-week">0</div></div>
+    <div class="stat"><div class="stat-label">완료</div><div class="stat-num c-success" id="s-done">0</div></div>
+  </div>
+
+  <div class="add-card">
+    <div class="add-card-title">새 업무 추가</div>
+    <div class="add-row">
+      <input type="text" id="task-input" placeholder="업무명 입력 후 Enter" />
+      <input type="date" id="date-input" />
+      <button class="add-btn" onclick="addTask()">추가</button>
+    </div>
+  </div>
+
+  <div class="filter-tabs">
+    <button class="tab-btn active" onclick="setFilter('all', this)">전체</button>
+    <button class="tab-btn" onclick="setFilter('today', this)">오늘 마감</button>
+    <button class="tab-btn" onclick="setFilter('week', this)">이번 주</button>
+    <button class="tab-btn" onclick="setFilter('done', this)">완료</button>
+  </div>
+
+  <div class="task-list" id="task-list"></div>
+
+  <div class="guide-card" id="guide-card" style="display:none;">
+    <strong>구글 시트 연동 방법</strong>
+    <ol>
+      <li>구글 시트에서 <code>확장 프로그램 → Apps Script</code> 열기</li>
+      <li>아래 코드 붙여넣고 저장 후 <strong>웹 앱으로 배포</strong> (액세스: 모든 사용자)</li>
+      <li>배포 URL을 '구글 시트 연동' 버튼에 입력</li>
+    </ol>
+    <div style="margin-top:10px;background:#dbeafe;border-radius:6px;padding:10px;font-family:monospace;font-size:11px;line-height:1.7;white-space:pre-wrap;">function doPost(e) {
+  const data = JSON.parse(e.postData.contents);
+  const sheet = SpreadsheetApp.getActiveSpreadsheet()
+    .getActiveSheet();
+  if (data.action === 'sync') {
+    sheet.clearContents();
+    sheet.appendRow(['업무명','마감일','완료여부']);
+    data.tasks.forEach(t =>
+      sheet.appendRow([t.name, t.due, t.done ? '완료' : '진행중'])
+    );
+  }
+  return ContentService.createTextOutput('OK');
+}</div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal-backdrop" id="modal">
+  <div class="modal">
+    <div class="modal-title">구글 시트 연동</div>
+    <div class="modal-sub">Apps Script 웹 앱 URL을 입력하면 업무 데이터를 구글 시트에 자동 저장합니다.</div>
+    <label>Apps Script 배포 URL</label>
+    <input type="text" id="gs-url" placeholder="https://script.google.com/macros/s/.../exec" />
+    <div class="modal-hint">
+      아직 설정 안 하셨나요? 앱 하단의 <strong>연동 가이드</strong>를 참고하세요.<br>
+      URL 저장 후 '동기화' 버튼으로 언제든 구글 시트에 업로드할 수 있습니다.
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">취소</button>
+      <button class="btn-save" onclick="saveGsUrl()">저장</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const TODAY = new Date();
+TODAY.setHours(0,0,0,0);
+const todayStr = TODAY.toISOString().split('T')[0];
+
+document.getElementById('today-label').textContent =
+  TODAY.toLocaleDateString('ko-KR', {year:'numeric', month:'long', day:'numeric', weekday:'short'});
+document.getElementById('date-input').value = todayStr;
+document.getElementById('date-input').min = todayStr;
+document.getElementById('task-input').addEventListener('keydown', e => { if(e.key==='Enter') addTask(); });
+
+let filter = 'all';
+let gsUrl = localStorage.getItem('gs-url') || '';
+let tasks = JSON.parse(localStorage.getItem('tasks') || '[]');
+
+if (tasks.length === 0) {
+  tasks = [
+    { id:1, name:'품질관리 월간 보고서 작성', due:'2026-06-29', done:false },
+    { id:2, name:'IATF 내부심사 자료 준비', due:'2026-07-03', done:false },
+    { id:3, name:'협력업체 VDA 평가 일정 조율', due:'2026-07-10', done:false },
+  ];
+  save();
+}
+
+let nextId = tasks.reduce((m,t) => Math.max(m,t.id), 0) + 1;
+
+function save() { localStorage.setItem('tasks', JSON.stringify(tasks)); }
+
+function daysLeft(due) {
+  const d = new Date(due); d.setHours(0,0,0,0);
+  return Math.round((d - TODAY) / 86400000);
+}
+
+function getBadge(task) {
+  if (task.done) return { cls:'badge-neutral', label:'완료' };
+  const d = daysLeft(task.due);
+  if (d < 0)  return { cls:'badge-danger', label:'마감 초과' };
+  if (d === 0) return { cls:'badge-danger', label:'오늘 마감' };
+  if (d <= 3)  return { cls:'badge-warning', label:`${d}일 남음` };
+  return { cls:'badge-success', label:`${d}일 남음` };
+}
+
+function getDot(task) {
+  if (task.done) return 'dot-neutral';
+  const d = daysLeft(task.due);
+  if (d <= 0) return 'dot-danger';
+  if (d <= 3) return 'dot-warning';
+  return 'dot-success';
+}
+
+function getFiltered() {
+  const active = tasks.filter(t => !t.done);
+  if (filter === 'today') return active.filter(t => daysLeft(t.due) <= 0);
+  if (filter === 'week')  return active.filter(t => daysLeft(t.due) > 0 && daysLeft(t.due) <= 7);
+  if (filter === 'done')  return tasks.filter(t => t.done);
+  return [...tasks].sort((a,b) => {
+    if (a.done !== b.done) return a.done ? 1 : -1;
+    return daysLeft(a.due) - daysLeft(b.due);
+  });
+}
+
+function render() {
+  const list = document.getElementById('task-list');
+  const filtered = getFiltered();
+
+  if (filtered.length === 0) {
+    list.innerHTML = `<div class="empty-state"><p>📭</p><p>표시할 업무가 없습니다.</p></div>`;
+  } else {
+    list.innerHTML = filtered.map(t => {
+      const b = getBadge(t);
+      const dueFormatted = new Date(t.due).toLocaleDateString('ko-KR',{month:'short',day:'numeric',weekday:'short'});
+      return `<div class="task-item${t.done?' done':''}">
+        <button class="check-btn${t.done?' checked':''}" onclick="toggle(${t.id})" title="${t.done?'미완료로':'완료로'} 변경">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="1,6 4.5,9.5 11,2"/></svg>
+        </button>
+        <div class="priority-dot ${getDot(t)}"></div>
+        <div class="task-body">
+          <div class="task-name">${t.name}</div>
+          <div class="task-due">📅 ${dueFormatted}</div>
+        </div>
+        <span class="badge ${b.cls}">${b.label}</span>
+        <button class="del-btn" onclick="del(${t.id})" title="삭제">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>`;
+    }).join('');
+  }
+
+  const active = tasks.filter(t => !t.done);
+  document.getElementById('s-total').textContent = tasks.length;
+  document.getElementById('s-today').textContent = active.filter(t => daysLeft(t.due) <= 0).length;
+  document.getElementById('s-week').textContent  = active.filter(t => daysLeft(t.due) > 0 && daysLeft(t.due) <= 7).length;
+  document.getElementById('s-done').textContent  = tasks.filter(t => t.done).length;
+}
+
+function addTask() {
+  const name = document.getElementById('task-input').value.trim();
+  const due  = document.getElementById('date-input').value;
+  if (!name) { showToast('업무명을 입력해 주세요.'); return; }
+  if (!due)  { showToast('마감일을 선택해 주세요.'); return; }
+  tasks.push({ id: nextId++, name, due, done: false });
+  save(); render();
+  document.getElementById('task-input').value = '';
+  showToast('업무가 추가됐습니다.');
+  if (gsUrl) syncToSheets(false);
+}
+
+function toggle(id) {
+  const t = tasks.find(t => t.id === id);
+  if (t) { t.done = !t.done; save(); render(); if (gsUrl) syncToSheets(false); }
+}
+
+function del(id) {
+  tasks = tasks.filter(t => t.id !== id);
+  save(); render();
+  showToast('업무를 삭제했습니다.');
+  if (gsUrl) syncToSheets(false);
+}
+
+function setFilter(f, btn) {
+  filter = f;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  render();
+}
+
+function openModal() {
+  document.getElementById('gs-url').value = gsUrl;
+  document.getElementById('modal').classList.add('open');
+  document.getElementById('guide-card').style.display = 'block';
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.remove('open');
+}
+
+function saveGsUrl() {
+  const url = document.getElementById('gs-url').value.trim();
+  gsUrl = url;
+  localStorage.setItem('gs-url', url);
+  closeModal();
+  if (url) { showToast('URL 저장 완료! 구글 시트에 동기화 중...'); syncToSheets(true); }
+  else { showToast('URL이 삭제됐습니다.'); }
+}
+
+async function syncToSheets(verbose) {
+  if (!gsUrl) return;
+  try {
+    await fetch(gsUrl, {
+      method: 'POST', mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'sync', tasks })
+    });
+    if (verbose) showToast('✅ 구글 시트 동기화 완료!');
+  } catch(e) {
+    if (verbose) showToast('⚠️ 동기화 실패. URL을 확인해 주세요.');
+  }
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+render();
+</script>
+</body>
+</html>
