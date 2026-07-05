@@ -33,16 +33,15 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body {
     font-family: 'Noto Sans KR', -apple-system, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    padding: 2rem 1rem;
+    background: var(--bg); color: var(--text);
+    min-height: 100vh; padding: 2rem 1rem;
   }
   .container { max-width: 720px; margin: 0 auto; }
 
+  /* Header */
   .app-header {
     display: flex; align-items: flex-start; justify-content: space-between;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
   }
   .app-title { font-size: 22px; font-weight: 600; letter-spacing: -0.02em; }
   .app-date { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
@@ -55,85 +54,85 @@
     transition: background 0.1s;
   }
   .sync-btn:hover { background: var(--surface-2); }
-  .sync-btn.syncing { color: var(--accent); border-color: var(--accent); }
 
-  .stats {
-    display: grid; grid-template-columns: repeat(4, 1fr);
-    gap: 10px; margin-bottom: 1.5rem;
-  }
-  .stat {
+  /* Nav tabs */
+  .nav-tabs {
+    display: flex; gap: 0; margin-bottom: 1.5rem;
     background: var(--surface); border: 1px solid var(--border);
-    border-radius: var(--radius-lg); padding: 14px 16px;
+    border-radius: var(--radius-lg); padding: 4px; width: fit-content;
   }
+  .nav-tab {
+    padding: 7px 20px; border-radius: var(--radius);
+    border: none; background: none;
+    font-family: inherit; font-size: 14px; font-weight: 500;
+    color: var(--text-muted); cursor: pointer; transition: all 0.15s;
+  }
+  .nav-tab.active { background: var(--accent); color: #fff; }
+
+  /* Status */
+  .status-bar { text-align: center; font-size: 12px; color: var(--text-muted); margin-bottom: 1rem; }
+  .status-bar.ok { color: var(--success); }
+  .status-bar.err { color: var(--danger); }
+
+  /* Stats */
+  .stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; margin-bottom: 1.5rem; }
+  .stat { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 14px 16px; }
   .stat-label { font-size: 12px; color: var(--text-muted); margin-bottom: 6px; }
   .stat-num { font-size: 26px; font-weight: 600; letter-spacing: -0.03em; }
   .stat-num.c-danger { color: var(--danger); }
   .stat-num.c-warning { color: var(--warning); }
   .stat-num.c-success { color: var(--success); }
 
-  .add-card {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: var(--radius-lg); padding: 1rem 1.25rem;
-    margin-bottom: 1.25rem;
-  }
+  /* Add card */
+  .add-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1rem 1.25rem; margin-bottom: 1.25rem; }
   .add-card-title { font-size: 13px; font-weight: 500; color: var(--text-sub); margin-bottom: 10px; }
   .add-row { display: flex; gap: 8px; }
   .add-row input[type="text"] {
-    flex: 1; height: 38px;
-    border: 1px solid var(--border); border-radius: var(--radius);
+    flex: 1; height: 38px; border: 1px solid var(--border); border-radius: var(--radius);
     padding: 0 12px; font-size: 14px; font-family: inherit;
-    background: var(--surface-2); color: var(--text);
-    outline: none; transition: border-color 0.15s;
+    background: var(--surface-2); color: var(--text); outline: none;
   }
   .add-row input[type="text"]:focus { border-color: var(--accent); background: #fff; }
   .add-row input[type="text"]::placeholder { color: var(--text-muted); }
   .add-row input[type="date"] {
     height: 38px; border: 1px solid var(--border); border-radius: var(--radius);
     padding: 0 10px; font-size: 13px; font-family: inherit;
-    background: var(--surface-2); color: var(--text);
-    outline: none; width: 148px;
+    background: var(--surface-2); color: var(--text); outline: none; width: 148px;
   }
   .add-row input[type="date"]:focus { border-color: var(--accent); }
   .add-btn {
-    height: 38px; padding: 0 16px;
-    background: var(--accent); color: #fff;
+    height: 38px; padding: 0 16px; background: var(--accent); color: #fff;
     border: none; border-radius: var(--radius);
-    font-family: inherit; font-size: 14px; font-weight: 500;
-    cursor: pointer; transition: opacity 0.1s; white-space: nowrap;
+    font-family: inherit; font-size: 14px; font-weight: 500; cursor: pointer;
   }
   .add-btn:hover { opacity: 0.9; }
 
+  /* Filter tabs */
   .filter-tabs { display: flex; gap: 4px; margin-bottom: 10px; }
   .tab-btn {
-    padding: 5px 12px; border-radius: 99px;
-    border: 1px solid transparent;
+    padding: 5px 12px; border-radius: 99px; border: 1px solid transparent;
     background: none; color: var(--text-muted);
-    font-family: inherit; font-size: 13px; cursor: pointer;
-    transition: all 0.1s;
+    font-family: inherit; font-size: 13px; cursor: pointer; transition: all 0.1s;
   }
-  .tab-btn.active {
-    background: var(--surface); border-color: var(--border-strong);
-    color: var(--text);
-  }
+  .tab-btn.active { background: var(--surface); border-color: var(--border-strong); color: var(--text); }
 
+  /* Task list */
   .task-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 1.5rem; }
   .task-item {
     background: var(--surface); border: 1px solid var(--border);
     border-radius: var(--radius-lg); padding: 12px 14px;
     display: flex; align-items: center; gap: 10px;
-    transition: border-color 0.15s, opacity 0.2s;
-    animation: slideIn 0.18s ease;
+    transition: border-color 0.15s; animation: slideIn 0.18s ease;
   }
-  @keyframes slideIn { from { opacity:0; transform: translateY(-4px); } to { opacity:1; transform: none; } }
+  @keyframes slideIn { from { opacity:0; transform:translateY(-4px); } to { opacity:1; transform:none; } }
   .task-item:hover { border-color: var(--border-strong); }
   .task-item.done { opacity: 0.55; }
   .task-item.done .task-name { text-decoration: line-through; color: var(--text-muted); }
 
   .check-btn {
     width: 20px; height: 20px; border-radius: 50%;
-    border: 1.5px solid var(--border-strong);
-    background: none; cursor: pointer; flex-shrink: 0;
-    display: flex; align-items: center; justify-content: center;
+    border: 1.5px solid var(--border-strong); background: none; cursor: pointer;
+    flex-shrink: 0; display: flex; align-items: center; justify-content: center;
     transition: all 0.15s; color: transparent;
   }
   .check-btn.checked { background: var(--success); border-color: var(--success); color: #fff; }
@@ -164,30 +163,108 @@
   .del-btn svg { width: 15px; height: 15px; }
 
   .empty-state {
-    text-align: center; padding: 2.5rem 1rem;
-    color: var(--text-muted); font-size: 14px;
-    background: var(--surface); border: 1px dashed var(--border);
-    border-radius: var(--radius-lg);
+    text-align: center; padding: 2.5rem 1rem; color: var(--text-muted); font-size: 14px;
+    background: var(--surface); border: 1px dashed var(--border); border-radius: var(--radius-lg);
   }
   .empty-state p:first-child { font-size: 24px; margin-bottom: 8px; }
 
-  .status-bar {
-    text-align: center; font-size: 12px; color: var(--text-muted);
+  /* ── Calendar ── */
+  .cal-header {
+    display: flex; align-items: center; justify-content: space-between;
     margin-bottom: 1rem;
   }
-  .status-bar.ok { color: var(--success); }
-  .status-bar.err { color: var(--danger); }
+  .cal-nav {
+    display: flex; align-items: center; gap: 12px;
+  }
+  .cal-nav button {
+    width: 32px; height: 32px; border-radius: 50%;
+    border: 1px solid var(--border-strong); background: var(--surface);
+    font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    color: var(--text-sub); transition: background 0.1s;
+  }
+  .cal-nav button:hover { background: var(--surface-2); }
+  .cal-month { font-size: 17px; font-weight: 600; min-width: 120px; text-align: center; }
+  .cal-today-btn {
+    padding: 6px 12px; border-radius: var(--radius);
+    border: 1px solid var(--border-strong); background: var(--surface);
+    font-family: inherit; font-size: 13px; cursor: pointer; color: var(--text-sub);
+  }
+  .cal-today-btn:hover { background: var(--surface-2); }
 
+  .cal-grid-head {
+    display: grid; grid-template-columns: repeat(7,1fr);
+    margin-bottom: 4px;
+  }
+  .cal-dow {
+    text-align: center; font-size: 12px; font-weight: 500;
+    color: var(--text-muted); padding: 4px 0;
+  }
+  .cal-dow:first-child { color: var(--danger); }
+  .cal-dow:last-child { color: var(--accent); }
+
+  .cal-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 3px; }
+  .cal-cell {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); min-height: 80px; padding: 6px;
+    transition: border-color 0.1s; cursor: default;
+  }
+  .cal-cell.other-month { background: var(--surface-2); opacity: 0.6; }
+  .cal-cell.today { border-color: var(--accent); border-width: 2px; }
+  .cal-cell.has-tasks { cursor: pointer; }
+  .cal-cell.has-tasks:hover { border-color: var(--border-strong); }
+
+  .cal-day-num {
+    font-size: 12px; font-weight: 500; margin-bottom: 4px;
+    line-height: 1;
+  }
+  .cal-cell.today .cal-day-num {
+    background: var(--accent); color: #fff;
+    width: 20px; height: 20px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px;
+  }
+  .cal-cell:nth-child(7n+1) .cal-day-num { color: var(--danger); }
+  .cal-cell:nth-child(7n) .cal-day-num { color: var(--accent); }
+
+  .cal-task-chip {
+    font-size: 10px; padding: 2px 5px; border-radius: 3px;
+    margin-bottom: 2px; white-space: nowrap; overflow: hidden;
+    text-overflow: ellipsis; line-height: 1.4;
+  }
+  .chip-danger { background: var(--danger-bg); color: var(--danger-text); }
+  .chip-warning { background: var(--warning-bg); color: var(--warning-text); }
+  .chip-success { background: var(--success-bg); color: var(--success-text); }
+  .chip-done { background: var(--surface-2); color: var(--text-muted); text-decoration: line-through; }
+
+  .cal-more { font-size: 10px; color: var(--text-muted); margin-top: 1px; }
+
+  /* Day detail panel */
+  .day-detail {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); padding: 1rem 1.25rem;
+    margin-top: 1rem; display: none;
+  }
+  .day-detail.open { display: block; }
+  .day-detail-title { font-size: 14px; font-weight: 600; margin-bottom: 10px; }
+  .day-detail-list { display: flex; flex-direction: column; gap: 6px; }
+  .day-detail-item {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 10px; border-radius: var(--radius);
+    background: var(--surface-2); border: 1px solid var(--border);
+    font-size: 13px;
+  }
+  .day-detail-item.done-item { opacity: 0.6; }
+  .day-detail-item.done-item span { text-decoration: line-through; }
+
+  /* Toast & Loading */
   .toast {
     position: fixed; bottom: 24px; right: 24px;
     background: var(--text); color: #fff;
     padding: 10px 18px; border-radius: var(--radius);
     font-size: 13px; z-index: 200;
-    opacity: 0; transform: translateY(8px);
-    transition: all 0.2s; pointer-events: none;
+    opacity: 0; transform: translateY(8px); transition: all 0.2s; pointer-events: none;
   }
   .toast.show { opacity: 1; transform: none; }
-
   .loading-overlay {
     position: fixed; inset: 0; background: rgba(255,255,255,0.7);
     display: none; align-items: center; justify-content: center;
@@ -196,58 +273,95 @@
   .loading-overlay.show { display: flex; }
 
   @media (max-width: 520px) {
-    .stats { grid-template-columns: repeat(2, 1fr); }
+    .stats { grid-template-columns: repeat(2,1fr); }
     .add-row { flex-wrap: wrap; }
     .add-row input[type="date"] { width: 100%; }
     .add-btn { width: 100%; }
+    .cal-cell { min-height: 60px; }
+    .cal-task-chip { display: none; }
+    .cal-day-num { font-size: 13px; }
   }
 </style>
 </head>
 <body>
 <div class="container">
+
   <div class="app-header">
     <div>
       <div class="app-title">업무 관리</div>
       <div class="app-date" id="today-label"></div>
     </div>
-    <button class="sync-btn" id="sync-btn" onclick="manualSync()">
-      ↻ 지금 동기화
-    </button>
+    <button class="sync-btn" onclick="manualSync()">↻ 지금 동기화</button>
   </div>
 
   <div class="status-bar" id="status-bar">구글 시트와 연동 중...</div>
 
-  <div class="stats">
-    <div class="stat"><div class="stat-label">전체 업무</div><div class="stat-num" id="s-total">-</div></div>
-    <div class="stat"><div class="stat-label">오늘 마감</div><div class="stat-num c-danger" id="s-today">-</div></div>
-    <div class="stat"><div class="stat-label">이번 주</div><div class="stat-num c-warning" id="s-week">-</div></div>
-    <div class="stat"><div class="stat-label">완료</div><div class="stat-num c-success" id="s-done">-</div></div>
+  <!-- Nav -->
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="switchView('list', this)">📋 목록</button>
+    <button class="nav-tab" onclick="switchView('calendar', this)">📅 달력</button>
   </div>
 
-  <div class="add-card">
-    <div class="add-card-title">새 업무 추가</div>
-    <div class="add-row">
-      <input type="text" id="task-input" placeholder="업무명 입력 후 Enter" />
-      <input type="date" id="date-input" />
-      <button class="add-btn" onclick="addTask()">추가</button>
+  <!-- LIST VIEW -->
+  <div id="view-list">
+    <div class="stats">
+      <div class="stat"><div class="stat-label">전체 업무</div><div class="stat-num" id="s-total">-</div></div>
+      <div class="stat"><div class="stat-label">오늘 마감</div><div class="stat-num c-danger" id="s-today">-</div></div>
+      <div class="stat"><div class="stat-label">이번 주</div><div class="stat-num c-warning" id="s-week">-</div></div>
+      <div class="stat"><div class="stat-label">완료</div><div class="stat-num c-success" id="s-done">-</div></div>
+    </div>
+
+    <div class="add-card">
+      <div class="add-card-title">새 업무 추가</div>
+      <div class="add-row">
+        <input type="text" id="task-input" placeholder="업무명 입력 후 Enter" />
+        <input type="date" id="date-input" />
+        <button class="add-btn" onclick="addTask()">추가</button>
+      </div>
+    </div>
+
+    <div class="filter-tabs">
+      <button class="tab-btn active" onclick="setFilter('all',this)">전체</button>
+      <button class="tab-btn" onclick="setFilter('today',this)">오늘 마감</button>
+      <button class="tab-btn" onclick="setFilter('week',this)">이번 주</button>
+      <button class="tab-btn" onclick="setFilter('done',this)">완료</button>
+    </div>
+
+    <div class="task-list" id="task-list"></div>
+  </div>
+
+  <!-- CALENDAR VIEW -->
+  <div id="view-calendar" style="display:none;">
+    <div class="cal-header">
+      <div class="cal-nav">
+        <button onclick="moveMonth(-1)">‹</button>
+        <div class="cal-month" id="cal-month-label"></div>
+        <button onclick="moveMonth(1)">›</button>
+      </div>
+      <button class="cal-today-btn" onclick="goToday()">오늘</button>
+    </div>
+
+    <div class="cal-grid-head">
+      <div class="cal-dow">일</div><div class="cal-dow">월</div>
+      <div class="cal-dow">화</div><div class="cal-dow">수</div>
+      <div class="cal-dow">목</div><div class="cal-dow">금</div>
+      <div class="cal-dow">토</div>
+    </div>
+    <div class="cal-grid" id="cal-grid"></div>
+
+    <div class="day-detail" id="day-detail">
+      <div class="day-detail-title" id="day-detail-title"></div>
+      <div class="day-detail-list" id="day-detail-list"></div>
     </div>
   </div>
 
-  <div class="filter-tabs">
-    <button class="tab-btn active" onclick="setFilter('all',this)">전체</button>
-    <button class="tab-btn" onclick="setFilter('today',this)">오늘 마감</button>
-    <button class="tab-btn" onclick="setFilter('week',this)">이번 주</button>
-    <button class="tab-btn" onclick="setFilter('done',this)">완료</button>
-  </div>
-
-  <div class="task-list" id="task-list"></div>
 </div>
 
 <div class="loading-overlay" id="loading">⏳ 동기화 중...</div>
 <div class="toast" id="toast"></div>
 
 <script>
-const GS_URL = 'https://script.google.com/macros/s/AKfycbzcJgXp4WeuPWArqpzaQ1ETSNyhmbWfU4Qoz_RrB6f08VsXKPJv6ZFkEPmvOxFDiP3BvA/exec';
+const GS_URL = 'https://script.google.com/macros/s/AKfycbz_oRtGbdnS7aYwbhW3cmlik28yBLIpjYjQKzpwXXndAtTj5kNYGaPLhlcdsWD23-sSgQ/exec';
 
 const TODAY = new Date(); TODAY.setHours(0,0,0,0);
 const todayStr = TODAY.toISOString().split('T')[0];
@@ -261,49 +375,46 @@ document.getElementById('task-input').addEventListener('keydown', e => { if(e.ke
 let tasks = [];
 let filter = 'all';
 let nextId = 1;
+let calYear = TODAY.getFullYear();
+let calMonth = TODAY.getMonth(); // 0-based
+let selectedDate = null;
+let currentView = 'list';
 
-// 앱 시작 시 구글 시트에서 데이터 로드
+// ── Data ──
 async function loadFromSheets() {
   setStatus('구글 시트에서 불러오는 중...', '');
   try {
     const res = await fetch(GS_URL + '?t=' + Date.now());
     const data = await res.json();
     if (Array.isArray(data) && data.length > 0) {
-      tasks = data.map(t => ({
-        id: Number(t.id) || nextId++,
-        name: t.name,
-        due: t.due,
-        done: t.done
-      }));
-      nextId = Math.max(...tasks.map(t => t.id), 0) + 1;
-      setStatus('✅ 구글 시트 연동됨 · ' + new Date().toLocaleTimeString('ko-KR', {hour:'2-digit',minute:'2-digit'}), 'ok');
+      tasks = data.map(t => ({ id: Number(t.id)||nextId++, name:t.name, due:t.due, done:t.done }));
+      nextId = Math.max(...tasks.map(t=>t.id), 0) + 1;
+      setStatus('✅ 구글 시트 연동됨 · ' + new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'}), 'ok');
     } else {
       setStatus('✅ 연동됨 (데이터 없음)', 'ok');
     }
   } catch(e) {
-    // 시트 로드 실패 시 로컬 데이터 사용
     const local = localStorage.getItem('tasks');
     if (local) tasks = JSON.parse(local);
     setStatus('⚠️ 오프라인 모드 · 로컬 데이터 사용 중', 'err');
   }
-  render();
+  renderList(); renderCalendar();
 }
 
 async function syncToSheets(silent) {
   if (!silent) showLoading(true);
   try {
     await fetch(GS_URL, {
-      method: 'POST', mode: 'no-cors',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ action:'sync', tasks })
+      method:'POST', mode:'no-cors',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({action:'sync', tasks})
     });
     localStorage.setItem('tasks', JSON.stringify(tasks));
-    setStatus('✅ 구글 시트 동기화 완료 · ' + new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'}), 'ok');
+    setStatus('✅ 동기화 완료 · ' + new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'}), 'ok');
     if (!silent) showToast('✅ 동기화 완료!');
   } catch(e) {
     localStorage.setItem('tasks', JSON.stringify(tasks));
     setStatus('⚠️ 동기화 실패 · 로컬에만 저장됨', 'err');
-    if (!silent) showToast('⚠️ 동기화 실패. 로컬에만 저장됩니다.');
   }
   if (!silent) showLoading(false);
 }
@@ -315,20 +426,19 @@ async function manualSync() {
   showToast('🔄 최신 데이터로 갱신됐습니다.');
 }
 
+// ── Helpers ──
 function daysLeft(due) {
   const d = new Date(due); d.setHours(0,0,0,0);
   return Math.round((d - TODAY) / 86400000);
 }
-
 function getBadge(task) {
-  if (task.done) return { cls:'badge-neutral', label:'완료' };
+  if (task.done) return {cls:'badge-neutral', label:'완료'};
   const d = daysLeft(task.due);
-  if (d < 0)   return { cls:'badge-danger',  label:'마감 초과' };
-  if (d === 0) return { cls:'badge-danger',  label:'오늘 마감' };
-  if (d <= 3)  return { cls:'badge-warning', label:`${d}일 남음` };
-  return       { cls:'badge-success', label:`${d}일 남음` };
+  if (d < 0)   return {cls:'badge-danger',  label:'마감 초과'};
+  if (d === 0) return {cls:'badge-danger',  label:'오늘 마감'};
+  if (d <= 3)  return {cls:'badge-warning', label:`${d}일 남음`};
+  return       {cls:'badge-success', label:`${d}일 남음`};
 }
-
 function getDot(task) {
   if (task.done) return 'dot-neutral';
   const d = daysLeft(task.due);
@@ -336,7 +446,25 @@ function getDot(task) {
   if (d <= 3) return 'dot-warning';
   return 'dot-success';
 }
+function getChipClass(task) {
+  if (task.done) return 'chip-done';
+  const d = daysLeft(task.due);
+  if (d <= 0) return 'chip-danger';
+  if (d <= 3) return 'chip-warning';
+  return 'chip-success';
+}
 
+// ── Views ──
+function switchView(view, btn) {
+  currentView = view;
+  document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('view-list').style.display = view === 'list' ? '' : 'none';
+  document.getElementById('view-calendar').style.display = view === 'calendar' ? '' : 'none';
+  if (view === 'calendar') renderCalendar();
+}
+
+// ── List View ──
 function getFiltered() {
   const active = tasks.filter(t => !t.done);
   if (filter === 'today') return active.filter(t => daysLeft(t.due) <= 0);
@@ -348,7 +476,7 @@ function getFiltered() {
   });
 }
 
-function render() {
+function renderList() {
   const list = document.getElementById('task-list');
   const filtered = getFiltered();
   if (filtered.length === 0) {
@@ -356,7 +484,7 @@ function render() {
   } else {
     list.innerHTML = filtered.map(t => {
       const b = getBadge(t);
-      const dueFormatted = new Date(t.due).toLocaleDateString('ko-KR',{month:'short',day:'numeric',weekday:'short'});
+      const due = new Date(t.due).toLocaleDateString('ko-KR',{month:'short',day:'numeric',weekday:'short'});
       return `<div class="task-item${t.done?' done':''}">
         <button class="check-btn${t.done?' checked':''}" onclick="toggle(${t.id})">
           <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="1,6 4.5,9.5 11,2"/></svg>
@@ -364,7 +492,7 @@ function render() {
         <div class="priority-dot ${getDot(t)}"></div>
         <div class="task-body">
           <div class="task-name">${t.name}</div>
-          <div class="task-due">📅 ${dueFormatted}</div>
+          <div class="task-due">📅 ${due}</div>
         </div>
         <span class="badge ${b.cls}">${b.label}</span>
         <button class="del-btn" onclick="del(${t.id})">
@@ -385,8 +513,8 @@ function addTask() {
   const due  = document.getElementById('date-input').value;
   if (!name) { showToast('업무명을 입력해 주세요.'); return; }
   if (!due)  { showToast('마감일을 선택해 주세요.'); return; }
-  tasks.push({ id: nextId++, name, due, done: false });
-  render();
+  tasks.push({id: nextId++, name, due, done: false});
+  renderList(); renderCalendar();
   document.getElementById('task-input').value = '';
   showToast('업무가 추가됐습니다.');
   syncToSheets(true);
@@ -394,12 +522,12 @@ function addTask() {
 
 function toggle(id) {
   const t = tasks.find(t => t.id === id);
-  if (t) { t.done = !t.done; render(); syncToSheets(true); }
+  if (t) { t.done = !t.done; renderList(); renderCalendar(); syncToSheets(true); }
 }
 
 function del(id) {
   tasks = tasks.filter(t => t.id !== id);
-  render();
+  renderList(); renderCalendar();
   showToast('업무를 삭제했습니다.');
   syncToSheets(true);
 }
@@ -408,26 +536,129 @@ function setFilter(f, btn) {
   filter = f;
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  render();
+  renderList();
 }
 
+// ── Calendar View ──
+function renderCalendar() {
+  const label = document.getElementById('cal-month-label');
+  label.textContent = `${calYear}년 ${calMonth+1}월`;
+
+  const firstDay = new Date(calYear, calMonth, 1).getDay(); // 0=Sun
+  const daysInMonth = new Date(calYear, calMonth+1, 0).getDate();
+  const daysInPrev  = new Date(calYear, calMonth, 0).getDate();
+
+  // Build task map: due date string → tasks[]
+  const taskMap = {};
+  tasks.forEach(t => {
+    if (!taskMap[t.due]) taskMap[t.due] = [];
+    taskMap[t.due].push(t);
+  });
+
+  const grid = document.getElementById('cal-grid');
+  let cells = '';
+  let totalCells = Math.ceil((firstDay + daysInMonth) / 7) * 7;
+
+  for (let i = 0; i < totalCells; i++) {
+    let day, month, year, isOther = false;
+    if (i < firstDay) {
+      day = daysInPrev - firstDay + i + 1;
+      month = calMonth - 1; year = calYear;
+      if (month < 0) { month = 11; year--; }
+      isOther = true;
+    } else if (i >= firstDay + daysInMonth) {
+      day = i - firstDay - daysInMonth + 1;
+      month = calMonth + 1; year = calYear;
+      if (month > 11) { month = 0; year++; }
+      isOther = true;
+    } else {
+      day = i - firstDay + 1;
+      month = calMonth; year = calYear;
+    }
+
+    const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+    const isToday = dateStr === todayStr;
+    const dayTasks = taskMap[dateStr] || [];
+    const hasTasks = dayTasks.length > 0;
+
+    const chips = dayTasks.slice(0,2).map(t =>
+      `<div class="cal-task-chip ${getChipClass(t)}">${t.name}</div>`
+    ).join('');
+    const more = dayTasks.length > 2 ? `<div class="cal-more">+${dayTasks.length-2}개 더</div>` : '';
+
+    cells += `<div class="cal-cell${isOther?' other-month':''}${isToday?' today':''}${hasTasks?' has-tasks':''}"
+      onclick="selectDay('${dateStr}')">
+      <div class="cal-day-num">${day}</div>
+      ${chips}${more}
+    </div>`;
+  }
+  grid.innerHTML = cells;
+
+  // Re-render detail if a date is selected
+  if (selectedDate) renderDayDetail(selectedDate);
+}
+
+function selectDay(dateStr) {
+  const dayTasks = tasks.filter(t => t.due === dateStr);
+  if (dayTasks.length === 0) {
+    // 날짜 클릭 시 해당 날짜로 업무 추가 폼 자동 세팅
+    selectedDate = null;
+    document.getElementById('day-detail').classList.remove('open');
+    return;
+  }
+  selectedDate = dateStr;
+  renderDayDetail(dateStr);
+}
+
+function renderDayDetail(dateStr) {
+  const dayTasks = tasks.filter(t => t.due === dateStr);
+  if (dayTasks.length === 0) {
+    document.getElementById('day-detail').classList.remove('open');
+    return;
+  }
+  const d = new Date(dateStr);
+  const formatted = d.toLocaleDateString('ko-KR',{month:'long',day:'numeric',weekday:'short'});
+  document.getElementById('day-detail-title').textContent = `📅 ${formatted} 업무 (${dayTasks.length}건)`;
+  document.getElementById('day-detail-list').innerHTML = dayTasks.map(t => {
+    const b = getBadge(t);
+    return `<div class="day-detail-item${t.done?' done-item':''}">
+      <div class="priority-dot ${getDot(t)}"></div>
+      <span style="flex:1;">${t.name}</span>
+      <span class="badge ${b.cls}">${b.label}</span>
+    </div>`;
+  }).join('');
+  document.getElementById('day-detail').classList.add('open');
+}
+
+function moveMonth(dir) {
+  calMonth += dir;
+  if (calMonth > 11) { calMonth = 0; calYear++; }
+  if (calMonth < 0)  { calMonth = 11; calYear--; }
+  selectedDate = null;
+  document.getElementById('day-detail').classList.remove('open');
+  renderCalendar();
+}
+
+function goToday() {
+  calYear = TODAY.getFullYear();
+  calMonth = TODAY.getMonth();
+  selectedDate = null;
+  document.getElementById('day-detail').classList.remove('open');
+  renderCalendar();
+}
+
+// ── UI helpers ──
 function setStatus(msg, cls) {
   const el = document.getElementById('status-bar');
-  el.textContent = msg;
-  el.className = 'status-bar ' + cls;
+  el.textContent = msg; el.className = 'status-bar ' + cls;
 }
-
-function showLoading(show) {
-  document.getElementById('loading').classList.toggle('show', show);
-}
-
+function showLoading(show) { document.getElementById('loading').classList.toggle('show', show); }
 function showToast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg; t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 2500);
 }
 
-// 시작
 loadFromSheets();
 </script>
 </body>
