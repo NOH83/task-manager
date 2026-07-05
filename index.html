@@ -31,7 +31,6 @@
     --radius-lg: 12px;
   }
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html { font-size: 16px; }
   body {
     font-family: 'Noto Sans KR', -apple-system, sans-serif;
     background: var(--bg);
@@ -39,10 +38,8 @@
     min-height: 100vh;
     padding: 2rem 1rem;
   }
-
   .container { max-width: 720px; margin: 0 auto; }
 
-  /* Header */
   .app-header {
     display: flex; align-items: flex-start; justify-content: space-between;
     margin-bottom: 2rem;
@@ -58,9 +55,8 @@
     transition: background 0.1s;
   }
   .sync-btn:hover { background: var(--surface-2); }
-  .sync-btn svg { width: 15px; height: 15px; flex-shrink: 0; }
+  .sync-btn.syncing { color: var(--accent); border-color: var(--accent); }
 
-  /* Stats */
   .stats {
     display: grid; grid-template-columns: repeat(4, 1fr);
     gap: 10px; margin-bottom: 1.5rem;
@@ -75,7 +71,6 @@
   .stat-num.c-warning { color: var(--warning); }
   .stat-num.c-success { color: var(--success); }
 
-  /* Add form */
   .add-card {
     background: var(--surface); border: 1px solid var(--border);
     border-radius: var(--radius-lg); padding: 1rem 1.25rem;
@@ -108,10 +103,7 @@
   }
   .add-btn:hover { opacity: 0.9; }
 
-  /* Filter tabs */
-  .filter-tabs {
-    display: flex; gap: 4px; margin-bottom: 10px;
-  }
+  .filter-tabs { display: flex; gap: 4px; margin-bottom: 10px; }
   .tab-btn {
     padding: 5px 12px; border-radius: 99px;
     border: 1px solid transparent;
@@ -124,7 +116,6 @@
     color: var(--text);
   }
 
-  /* Task list */
   .task-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 1.5rem; }
   .task-item {
     background: var(--surface); border: 1px solid var(--border);
@@ -155,13 +146,10 @@
   .dot-neutral { background: var(--border-strong); }
 
   .task-body { flex: 1; min-width: 0; }
-  .task-name { font-size: 14px; font-weight: 400; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .task-name { font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .task-due { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
 
-  .badge {
-    font-size: 11px; font-weight: 500;
-    padding: 2px 8px; border-radius: 99px; flex-shrink: 0;
-  }
+  .badge { font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: 99px; flex-shrink: 0; }
   .badge-danger { background: var(--danger-bg); color: var(--danger-text); }
   .badge-warning { background: var(--warning-bg); color: var(--warning-text); }
   .badge-success { background: var(--success-bg); color: var(--success-text); }
@@ -183,43 +171,13 @@
   }
   .empty-state p:first-child { font-size: 24px; margin-bottom: 8px; }
 
-  /* Google Sheets modal */
-  .modal-backdrop {
-    position: fixed; inset: 0; background: rgba(0,0,0,0.35);
-    display: none; align-items: center; justify-content: center;
-    z-index: 100;
+  .status-bar {
+    text-align: center; font-size: 12px; color: var(--text-muted);
+    margin-bottom: 1rem;
   }
-  .modal-backdrop.open { display: flex; }
-  .modal {
-    background: var(--surface); border-radius: var(--radius-lg);
-    padding: 1.5rem; width: 90%; max-width: 460px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.15);
-  }
-  .modal-title { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
-  .modal-sub { font-size: 13px; color: var(--text-sub); margin-bottom: 1rem; line-height: 1.5; }
-  .modal label { font-size: 13px; font-weight: 500; display: block; margin-bottom: 5px; }
-  .modal input[type="text"] {
-    width: 100%; height: 38px; border: 1px solid var(--border);
-    border-radius: var(--radius); padding: 0 12px;
-    font-size: 13px; font-family: inherit; color: var(--text);
-    background: var(--surface-2); outline: none; margin-bottom: 12px;
-  }
-  .modal input[type="text"]:focus { border-color: var(--accent); background: #fff; }
-  .modal-hint { font-size: 12px; color: var(--text-muted); margin-bottom: 1.25rem; line-height: 1.6; }
-  .modal-hint code { background: var(--surface-2); border: 1px solid var(--border); padding: 1px 5px; border-radius: 4px; font-family: monospace; font-size: 11px; }
-  .modal-actions { display: flex; gap: 8px; justify-content: flex-end; }
-  .btn-cancel {
-    padding: 8px 16px; border: 1px solid var(--border-strong);
-    border-radius: var(--radius); background: none;
-    font-family: inherit; font-size: 13px; cursor: pointer; color: var(--text-sub);
-  }
-  .btn-save {
-    padding: 8px 16px; border: none;
-    border-radius: var(--radius); background: var(--accent); color: #fff;
-    font-family: inherit; font-size: 13px; font-weight: 500; cursor: pointer;
-  }
+  .status-bar.ok { color: var(--success); }
+  .status-bar.err { color: var(--danger); }
 
-  /* Toast */
   .toast {
     position: fixed; bottom: 24px; right: 24px;
     background: var(--text); color: #fff;
@@ -230,16 +188,12 @@
   }
   .toast.show { opacity: 1; transform: none; }
 
-  /* Google Sheets guide */
-  .guide-card {
-    background: var(--accent-bg); border: 1px solid #bfdbfe;
-    border-radius: var(--radius-lg); padding: 1rem 1.25rem;
-    font-size: 13px; color: var(--accent-text); line-height: 1.7;
+  .loading-overlay {
+    position: fixed; inset: 0; background: rgba(255,255,255,0.7);
+    display: none; align-items: center; justify-content: center;
+    z-index: 300; font-size: 14px; color: var(--text-sub);
   }
-  .guide-card strong { font-weight: 600; display: block; margin-bottom: 6px; font-size: 14px; }
-  .guide-card ol { padding-left: 1.2rem; }
-  .guide-card li { margin-bottom: 3px; }
-  .guide-card code { background: #dbeafe; padding: 1px 5px; border-radius: 3px; font-family: monospace; font-size: 12px; }
+  .loading-overlay.show { display: flex; }
 
   @media (max-width: 520px) {
     .stats { grid-template-columns: repeat(2, 1fr); }
@@ -251,23 +205,23 @@
 </head>
 <body>
 <div class="container">
-
   <div class="app-header">
     <div>
       <div class="app-title">업무 관리</div>
       <div class="app-date" id="today-label"></div>
     </div>
-    <button class="sync-btn" onclick="openModal()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M4 9h16M4 14h16M9 4v16"/></svg>
-      구글 시트 연동
+    <button class="sync-btn" id="sync-btn" onclick="manualSync()">
+      ↻ 지금 동기화
     </button>
   </div>
 
+  <div class="status-bar" id="status-bar">구글 시트와 연동 중...</div>
+
   <div class="stats">
-    <div class="stat"><div class="stat-label">전체 업무</div><div class="stat-num" id="s-total">0</div></div>
-    <div class="stat"><div class="stat-label">오늘 마감</div><div class="stat-num c-danger" id="s-today">0</div></div>
-    <div class="stat"><div class="stat-label">이번 주</div><div class="stat-num c-warning" id="s-week">0</div></div>
-    <div class="stat"><div class="stat-label">완료</div><div class="stat-num c-success" id="s-done">0</div></div>
+    <div class="stat"><div class="stat-label">전체 업무</div><div class="stat-num" id="s-total">-</div></div>
+    <div class="stat"><div class="stat-label">오늘 마감</div><div class="stat-num c-danger" id="s-today">-</div></div>
+    <div class="stat"><div class="stat-label">이번 주</div><div class="stat-num c-warning" id="s-week">-</div></div>
+    <div class="stat"><div class="stat-label">완료</div><div class="stat-num c-success" id="s-done">-</div></div>
   </div>
 
   <div class="add-card">
@@ -280,84 +234,86 @@
   </div>
 
   <div class="filter-tabs">
-    <button class="tab-btn active" onclick="setFilter('all', this)">전체</button>
-    <button class="tab-btn" onclick="setFilter('today', this)">오늘 마감</button>
-    <button class="tab-btn" onclick="setFilter('week', this)">이번 주</button>
-    <button class="tab-btn" onclick="setFilter('done', this)">완료</button>
+    <button class="tab-btn active" onclick="setFilter('all',this)">전체</button>
+    <button class="tab-btn" onclick="setFilter('today',this)">오늘 마감</button>
+    <button class="tab-btn" onclick="setFilter('week',this)">이번 주</button>
+    <button class="tab-btn" onclick="setFilter('done',this)">완료</button>
   </div>
 
   <div class="task-list" id="task-list"></div>
-
-  <div class="guide-card" id="guide-card" style="display:none;">
-    <strong>구글 시트 연동 방법</strong>
-    <ol>
-      <li>구글 시트에서 <code>확장 프로그램 → Apps Script</code> 열기</li>
-      <li>아래 코드 붙여넣고 저장 후 <strong>웹 앱으로 배포</strong> (액세스: 모든 사용자)</li>
-      <li>배포 URL을 '구글 시트 연동' 버튼에 입력</li>
-    </ol>
-    <div style="margin-top:10px;background:#dbeafe;border-radius:6px;padding:10px;font-family:monospace;font-size:11px;line-height:1.7;white-space:pre-wrap;">function doPost(e) {
-  const data = JSON.parse(e.postData.contents);
-  const sheet = SpreadsheetApp.getActiveSpreadsheet()
-    .getActiveSheet();
-  if (data.action === 'sync') {
-    sheet.clearContents();
-    sheet.appendRow(['업무명','마감일','완료여부']);
-    data.tasks.forEach(t =>
-      sheet.appendRow([t.name, t.due, t.done ? '완료' : '진행중'])
-    );
-  }
-  return ContentService.createTextOutput('OK');
-}</div>
-  </div>
 </div>
 
-<!-- Modal -->
-<div class="modal-backdrop" id="modal">
-  <div class="modal">
-    <div class="modal-title">구글 시트 연동</div>
-    <div class="modal-sub">Apps Script 웹 앱 URL을 입력하면 업무 데이터를 구글 시트에 자동 저장합니다.</div>
-    <label>Apps Script 배포 URL</label>
-    <input type="text" id="gs-url" placeholder="https://script.google.com/macros/s/.../exec" />
-    <div class="modal-hint">
-      아직 설정 안 하셨나요? 앱 하단의 <strong>연동 가이드</strong>를 참고하세요.<br>
-      URL 저장 후 '동기화' 버튼으로 언제든 구글 시트에 업로드할 수 있습니다.
-    </div>
-    <div class="modal-actions">
-      <button class="btn-cancel" onclick="closeModal()">취소</button>
-      <button class="btn-save" onclick="saveGsUrl()">저장</button>
-    </div>
-  </div>
-</div>
-
+<div class="loading-overlay" id="loading">⏳ 동기화 중...</div>
 <div class="toast" id="toast"></div>
 
 <script>
-const TODAY = new Date();
-TODAY.setHours(0,0,0,0);
+const GS_URL = 'https://script.google.com/macros/s/AKfycbzcJgXp4WeuPWArqpzaQ1ETSNyhmbWfU4Qoz_RrB6f08VsXKPJv6ZFkEPmvOxFDiP3BvA/exec';
+
+const TODAY = new Date(); TODAY.setHours(0,0,0,0);
 const todayStr = TODAY.toISOString().split('T')[0];
 
 document.getElementById('today-label').textContent =
-  TODAY.toLocaleDateString('ko-KR', {year:'numeric', month:'long', day:'numeric', weekday:'short'});
+  TODAY.toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric',weekday:'short'});
 document.getElementById('date-input').value = todayStr;
 document.getElementById('date-input').min = todayStr;
 document.getElementById('task-input').addEventListener('keydown', e => { if(e.key==='Enter') addTask(); });
 
+let tasks = [];
 let filter = 'all';
-let gsUrl = localStorage.getItem('gs-url') || '';
-let tasks = JSON.parse(localStorage.getItem('tasks') || '[]');
+let nextId = 1;
 
-if (tasks.length === 0) {
-  tasks = [
-    { id:1, name:'품질관리 월간 보고서 작성', due:'2026-06-29', done:false },
-    { id:2, name:'IATF 내부심사 자료 준비', due:'2026-07-03', done:false },
-    { id:3, name:'협력업체 VDA 평가 일정 조율', due:'2026-07-10', done:false },
-  ];
-  save();
+// 앱 시작 시 구글 시트에서 데이터 로드
+async function loadFromSheets() {
+  setStatus('구글 시트에서 불러오는 중...', '');
+  try {
+    const res = await fetch(GS_URL + '?t=' + Date.now());
+    const data = await res.json();
+    if (Array.isArray(data) && data.length > 0) {
+      tasks = data.map(t => ({
+        id: Number(t.id) || nextId++,
+        name: t.name,
+        due: t.due,
+        done: t.done
+      }));
+      nextId = Math.max(...tasks.map(t => t.id), 0) + 1;
+      setStatus('✅ 구글 시트 연동됨 · ' + new Date().toLocaleTimeString('ko-KR', {hour:'2-digit',minute:'2-digit'}), 'ok');
+    } else {
+      setStatus('✅ 연동됨 (데이터 없음)', 'ok');
+    }
+  } catch(e) {
+    // 시트 로드 실패 시 로컬 데이터 사용
+    const local = localStorage.getItem('tasks');
+    if (local) tasks = JSON.parse(local);
+    setStatus('⚠️ 오프라인 모드 · 로컬 데이터 사용 중', 'err');
+  }
+  render();
 }
 
-let nextId = tasks.reduce((m,t) => Math.max(m,t.id), 0) + 1;
+async function syncToSheets(silent) {
+  if (!silent) showLoading(true);
+  try {
+    await fetch(GS_URL, {
+      method: 'POST', mode: 'no-cors',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ action:'sync', tasks })
+    });
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+    setStatus('✅ 구글 시트 동기화 완료 · ' + new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'}), 'ok');
+    if (!silent) showToast('✅ 동기화 완료!');
+  } catch(e) {
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+    setStatus('⚠️ 동기화 실패 · 로컬에만 저장됨', 'err');
+    if (!silent) showToast('⚠️ 동기화 실패. 로컬에만 저장됩니다.');
+  }
+  if (!silent) showLoading(false);
+}
 
-function save() { localStorage.setItem('tasks', JSON.stringify(tasks)); }
+async function manualSync() {
+  showLoading(true);
+  await loadFromSheets();
+  showLoading(false);
+  showToast('🔄 최신 데이터로 갱신됐습니다.');
+}
 
 function daysLeft(due) {
   const d = new Date(due); d.setHours(0,0,0,0);
@@ -367,10 +323,10 @@ function daysLeft(due) {
 function getBadge(task) {
   if (task.done) return { cls:'badge-neutral', label:'완료' };
   const d = daysLeft(task.due);
-  if (d < 0)  return { cls:'badge-danger', label:'마감 초과' };
-  if (d === 0) return { cls:'badge-danger', label:'오늘 마감' };
+  if (d < 0)   return { cls:'badge-danger',  label:'마감 초과' };
+  if (d === 0) return { cls:'badge-danger',  label:'오늘 마감' };
   if (d <= 3)  return { cls:'badge-warning', label:`${d}일 남음` };
-  return { cls:'badge-success', label:`${d}일 남음` };
+  return       { cls:'badge-success', label:`${d}일 남음` };
 }
 
 function getDot(task) {
@@ -395,7 +351,6 @@ function getFiltered() {
 function render() {
   const list = document.getElementById('task-list');
   const filtered = getFiltered();
-
   if (filtered.length === 0) {
     list.innerHTML = `<div class="empty-state"><p>📭</p><p>표시할 업무가 없습니다.</p></div>`;
   } else {
@@ -403,7 +358,7 @@ function render() {
       const b = getBadge(t);
       const dueFormatted = new Date(t.due).toLocaleDateString('ko-KR',{month:'short',day:'numeric',weekday:'short'});
       return `<div class="task-item${t.done?' done':''}">
-        <button class="check-btn${t.done?' checked':''}" onclick="toggle(${t.id})" title="${t.done?'미완료로':'완료로'} 변경">
+        <button class="check-btn${t.done?' checked':''}" onclick="toggle(${t.id})">
           <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="1,6 4.5,9.5 11,2"/></svg>
         </button>
         <div class="priority-dot ${getDot(t)}"></div>
@@ -412,13 +367,12 @@ function render() {
           <div class="task-due">📅 ${dueFormatted}</div>
         </div>
         <span class="badge ${b.cls}">${b.label}</span>
-        <button class="del-btn" onclick="del(${t.id})" title="삭제">
+        <button class="del-btn" onclick="del(${t.id})">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
         </button>
       </div>`;
     }).join('');
   }
-
   const active = tasks.filter(t => !t.done);
   document.getElementById('s-total').textContent = tasks.length;
   document.getElementById('s-today').textContent = active.filter(t => daysLeft(t.due) <= 0).length;
@@ -432,22 +386,22 @@ function addTask() {
   if (!name) { showToast('업무명을 입력해 주세요.'); return; }
   if (!due)  { showToast('마감일을 선택해 주세요.'); return; }
   tasks.push({ id: nextId++, name, due, done: false });
-  save(); render();
+  render();
   document.getElementById('task-input').value = '';
   showToast('업무가 추가됐습니다.');
-  if (gsUrl) syncToSheets(false);
+  syncToSheets(true);
 }
 
 function toggle(id) {
   const t = tasks.find(t => t.id === id);
-  if (t) { t.done = !t.done; save(); render(); if (gsUrl) syncToSheets(false); }
+  if (t) { t.done = !t.done; render(); syncToSheets(true); }
 }
 
 function del(id) {
   tasks = tasks.filter(t => t.id !== id);
-  save(); render();
+  render();
   showToast('업무를 삭제했습니다.');
-  if (gsUrl) syncToSheets(false);
+  syncToSheets(true);
 }
 
 function setFilter(f, btn) {
@@ -457,37 +411,14 @@ function setFilter(f, btn) {
   render();
 }
 
-function openModal() {
-  document.getElementById('gs-url').value = gsUrl;
-  document.getElementById('modal').classList.add('open');
-  document.getElementById('guide-card').style.display = 'block';
+function setStatus(msg, cls) {
+  const el = document.getElementById('status-bar');
+  el.textContent = msg;
+  el.className = 'status-bar ' + cls;
 }
 
-function closeModal() {
-  document.getElementById('modal').classList.remove('open');
-}
-
-function saveGsUrl() {
-  const url = document.getElementById('gs-url').value.trim();
-  gsUrl = url;
-  localStorage.setItem('gs-url', url);
-  closeModal();
-  if (url) { showToast('URL 저장 완료! 구글 시트에 동기화 중...'); syncToSheets(true); }
-  else { showToast('URL이 삭제됐습니다.'); }
-}
-
-async function syncToSheets(verbose) {
-  if (!gsUrl) return;
-  try {
-    await fetch(gsUrl, {
-      method: 'POST', mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'sync', tasks })
-    });
-    if (verbose) showToast('✅ 구글 시트 동기화 완료!');
-  } catch(e) {
-    if (verbose) showToast('⚠️ 동기화 실패. URL을 확인해 주세요.');
-  }
+function showLoading(show) {
+  document.getElementById('loading').classList.toggle('show', show);
 }
 
 function showToast(msg) {
@@ -496,7 +427,8 @@ function showToast(msg) {
   setTimeout(() => t.classList.remove('show'), 2500);
 }
 
-render();
+// 시작
+loadFromSheets();
 </script>
 </body>
 </html>
