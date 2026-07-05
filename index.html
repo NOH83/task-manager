@@ -387,7 +387,7 @@ async function loadFromSheets() {
     const res = await fetch(GS_URL + '?t=' + Date.now());
     const data = await res.json();
     if (Array.isArray(data) && data.length > 0) {
-      tasks = data.map(t => ({ id: Number(t.id)||nextId++, name:t.name, due:t.due, done:t.done }));
+      tasks = data.map(t => ({ id: Number(t.id)||nextId++, name:t.name, due:normalizeDate(t.due), done:t.done }));
       nextId = Math.max(...tasks.map(t=>t.id), 0) + 1;
       setStatus('✅ 구글 시트 연동됨 · ' + new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'}), 'ok');
     } else {
@@ -395,7 +395,9 @@ async function loadFromSheets() {
     }
   } catch(e) {
     const local = localStorage.getItem('tasks');
-    if (local) tasks = JSON.parse(local);
+    if (local) {
+      tasks = JSON.parse(local).map(t => ({...t, due: normalizeDate(t.due)}));
+    }
     setStatus('⚠️ 오프라인 모드 · 로컬 데이터 사용 중', 'err');
   }
   renderList(); renderCalendar();
@@ -427,6 +429,21 @@ async function manualSync() {
 }
 
 // ── Helpers ──
+// 날짜를 항상 YYYY-MM-DD 문자열로 정규화
+function normalizeDate(val) {
+  if (!val) return '';
+  // 이미 YYYY-MM-DD 형식이면 그대로
+  if (/^\d{4}-\d{2}-\d{2}$/.test(val)) return val;
+  // ISO 문자열(T 포함) → 로컬 날짜로 변환
+  const d = new Date(val);
+  if (isNaN(d)) return val;
+  // UTC 기준이 아닌 로컬 날짜로 추출
+  const y = d.getFullYear();
+  const m = String(d.getMonth()+1).padStart(2,'0');
+  const day = String(d.getDate()).padStart(2,'0');
+  return `${y}-${m}-${day}`;
+}
+
 function daysLeft(due) {
   const d = new Date(due); d.setHours(0,0,0,0);
   return Math.round((d - TODAY) / 86400000);
@@ -513,7 +530,7 @@ function addTask() {
   const due  = document.getElementById('date-input').value;
   if (!name) { showToast('업무명을 입력해 주세요.'); return; }
   if (!due)  { showToast('마감일을 선택해 주세요.'); return; }
-  tasks.push({id: nextId++, name, due, done: false});
+  tasks.push({id: nextId++, name, due: normalizeDate(due), done: false});
   renderList(); renderCalendar();
   document.getElementById('task-input').value = '';
   showToast('업무가 추가됐습니다.');
