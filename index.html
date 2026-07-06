@@ -7,74 +7,54 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #f5f5f3;
-    --surface: #ffffff;
-    --surface-2: #fafaf9;
-    --border: #e5e5e3;
-    --border-strong: #d0d0ce;
-    --text: #1a1a18;
-    --text-sub: #6b6b68;
-    --text-muted: #9b9b97;
-    --accent: #2563eb;
-    --accent-bg: #eff6ff;
-    --accent-text: #1d4ed8;
-    --danger: #dc2626;
-    --danger-bg: #fef2f2;
-    --danger-text: #b91c1c;
-    --warning: #d97706;
-    --warning-bg: #fffbeb;
-    --warning-text: #b45309;
-    --success: #16a34a;
-    --success-bg: #f0fdf4;
-    --success-text: #15803d;
-    --radius: 8px;
-    --radius-lg: 12px;
+    --bg: #f5f5f3; --surface: #ffffff; --surface-2: #fafaf9;
+    --border: #e5e5e3; --border-strong: #d0d0ce;
+    --text: #1a1a18; --text-sub: #6b6b68; --text-muted: #9b9b97;
+    --accent: #2563eb; --accent-bg: #eff6ff; --accent-text: #1d4ed8;
+    --danger: #dc2626; --danger-bg: #fef2f2; --danger-text: #b91c1c;
+    --warning: #d97706; --warning-bg: #fffbeb; --warning-text: #b45309;
+    --success: #16a34a; --success-bg: #f0fdf4; --success-text: #15803d;
+    --radius: 8px; --radius-lg: 12px;
   }
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: 'Noto Sans KR', -apple-system, sans-serif;
-    background: var(--bg); color: var(--text);
-    min-height: 100vh; padding: 2rem 1rem;
-  }
+  body { font-family: 'Noto Sans KR', -apple-system, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding: 2rem 1rem; }
   .container { max-width: 720px; margin: 0 auto; }
 
-  /* Header */
-  .app-header {
-    display: flex; align-items: flex-start; justify-content: space-between;
-    margin-bottom: 1.5rem;
-  }
+  .app-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1rem; }
   .app-title { font-size: 22px; font-weight: 600; letter-spacing: -0.02em; }
   .app-date { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
-  .sync-btn {
+  .header-btns { display: flex; gap: 8px; }
+  .icon-btn {
     display: flex; align-items: center; gap: 6px;
     padding: 8px 14px; border-radius: var(--radius);
-    border: 1px solid var(--border-strong);
-    background: var(--surface); color: var(--text-sub);
-    font-family: inherit; font-size: 13px; cursor: pointer;
-    transition: background 0.1s;
+    border: 1px solid var(--border-strong); background: var(--surface);
+    color: var(--text-sub); font-family: inherit; font-size: 13px; cursor: pointer;
   }
-  .sync-btn:hover { background: var(--surface-2); }
+  .icon-btn:hover { background: var(--surface-2); }
+  .icon-btn.danger { border-color: #fca5a5; color: var(--danger); background: var(--danger-bg); }
 
-  /* Nav tabs */
-  .nav-tabs {
-    display: flex; gap: 0; margin-bottom: 1.5rem;
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: var(--radius-lg); padding: 4px; width: fit-content;
+  .status-bar { text-align: center; font-size: 12px; color: var(--text-muted); margin-bottom: 1rem; padding: 6px; border-radius: var(--radius); background: var(--surface); border: 1px solid var(--border); }
+  .status-bar.ok  { color: var(--success); background: var(--success-bg); border-color: #bbf7d0; }
+  .status-bar.err { color: var(--danger);  background: var(--danger-bg);  border-color: #fca5a5; }
+  .status-bar.warn{ color: var(--warning); background: var(--warning-bg); border-color: #fde68a; }
+
+  /* backup banner */
+  .backup-banner {
+    display: none; align-items: center; justify-content: space-between;
+    background: var(--warning-bg); border: 1px solid #fde68a;
+    border-radius: var(--radius); padding: 10px 14px;
+    font-size: 13px; color: var(--warning-text); margin-bottom: 1rem;
   }
-  .nav-tab {
-    padding: 7px 20px; border-radius: var(--radius);
-    border: none; background: none;
-    font-family: inherit; font-size: 14px; font-weight: 500;
-    color: var(--text-muted); cursor: pointer; transition: all 0.15s;
+  .backup-banner.show { display: flex; }
+  .backup-banner button {
+    padding: 4px 12px; border-radius: var(--radius); border: 1px solid var(--warning);
+    background: #fff; color: var(--warning-text); font-family: inherit; font-size: 12px; cursor: pointer;
   }
+
+  .nav-tabs { display: flex; gap: 0; margin-bottom: 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 4px; width: fit-content; }
+  .nav-tab { padding: 7px 20px; border-radius: var(--radius); border: none; background: none; font-family: inherit; font-size: 14px; font-weight: 500; color: var(--text-muted); cursor: pointer; transition: all 0.15s; }
   .nav-tab.active { background: var(--accent); color: #fff; }
 
-  /* Status */
-  .status-bar { text-align: center; font-size: 12px; color: var(--text-muted); margin-bottom: 1rem; }
-  .status-bar.ok { color: var(--success); }
-  .status-bar.err { color: var(--danger); }
-
-  /* Stats */
   .stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; margin-bottom: 1.5rem; }
   .stat { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 14px 16px; }
   .stat-label { font-size: 12px; color: var(--text-muted); margin-bottom: 6px; }
@@ -83,194 +63,125 @@
   .stat-num.c-warning { color: var(--warning); }
   .stat-num.c-success { color: var(--success); }
 
-  /* Add card */
   .add-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1rem 1.25rem; margin-bottom: 1.25rem; }
   .add-card-title { font-size: 13px; font-weight: 500; color: var(--text-sub); margin-bottom: 10px; }
   .add-row { display: flex; gap: 8px; }
-  .add-row input[type="text"] {
-    flex: 1; height: 38px; border: 1px solid var(--border); border-radius: var(--radius);
-    padding: 0 12px; font-size: 14px; font-family: inherit;
-    background: var(--surface-2); color: var(--text); outline: none;
-  }
+  .add-row input[type="text"] { flex: 1; height: 38px; border: 1px solid var(--border); border-radius: var(--radius); padding: 0 12px; font-size: 14px; font-family: inherit; background: var(--surface-2); color: var(--text); outline: none; }
   .add-row input[type="text"]:focus { border-color: var(--accent); background: #fff; }
   .add-row input[type="text"]::placeholder { color: var(--text-muted); }
-  .add-row input[type="date"] {
-    height: 38px; border: 1px solid var(--border); border-radius: var(--radius);
-    padding: 0 10px; font-size: 13px; font-family: inherit;
-    background: var(--surface-2); color: var(--text); outline: none; width: 148px;
-  }
+  .add-row input[type="date"] { height: 38px; border: 1px solid var(--border); border-radius: var(--radius); padding: 0 10px; font-size: 13px; font-family: inherit; background: var(--surface-2); color: var(--text); outline: none; width: 148px; }
   .add-row input[type="date"]:focus { border-color: var(--accent); }
-  .add-btn {
-    height: 38px; padding: 0 16px; background: var(--accent); color: #fff;
-    border: none; border-radius: var(--radius);
-    font-family: inherit; font-size: 14px; font-weight: 500; cursor: pointer;
-  }
+  .add-btn { height: 38px; padding: 0 16px; background: var(--accent); color: #fff; border: none; border-radius: var(--radius); font-family: inherit; font-size: 14px; font-weight: 500; cursor: pointer; }
   .add-btn:hover { opacity: 0.9; }
 
-  /* Filter tabs */
   .filter-tabs { display: flex; gap: 4px; margin-bottom: 10px; }
-  .tab-btn {
-    padding: 5px 12px; border-radius: 99px; border: 1px solid transparent;
-    background: none; color: var(--text-muted);
-    font-family: inherit; font-size: 13px; cursor: pointer; transition: all 0.1s;
-  }
+  .tab-btn { padding: 5px 12px; border-radius: 99px; border: 1px solid transparent; background: none; color: var(--text-muted); font-family: inherit; font-size: 13px; cursor: pointer; }
   .tab-btn.active { background: var(--surface); border-color: var(--border-strong); color: var(--text); }
 
-  /* Task list */
   .task-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 1.5rem; }
-  .task-item {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: var(--radius-lg); padding: 12px 14px;
-    display: flex; align-items: center; gap: 10px;
-    transition: border-color 0.15s; animation: slideIn 0.18s ease;
-  }
+  .task-item { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 12px 14px; display: flex; align-items: center; gap: 10px; animation: slideIn 0.18s ease; }
   @keyframes slideIn { from { opacity:0; transform:translateY(-4px); } to { opacity:1; transform:none; } }
   .task-item:hover { border-color: var(--border-strong); }
   .task-item.done { opacity: 0.55; }
   .task-item.done .task-name { text-decoration: line-through; color: var(--text-muted); }
 
-  .check-btn {
-    width: 20px; height: 20px; border-radius: 50%;
-    border: 1.5px solid var(--border-strong); background: none; cursor: pointer;
-    flex-shrink: 0; display: flex; align-items: center; justify-content: center;
-    transition: all 0.15s; color: transparent;
-  }
+  .check-btn { width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid var(--border-strong); background: none; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all 0.15s; color: transparent; }
   .check-btn.checked { background: var(--success); border-color: var(--success); color: #fff; }
   .check-btn svg { width: 11px; height: 11px; }
 
   .priority-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
-  .dot-danger { background: var(--danger); }
-  .dot-warning { background: var(--warning); }
-  .dot-success { background: var(--success); }
-  .dot-neutral { background: var(--border-strong); }
+  .dot-danger { background: var(--danger); } .dot-warning { background: var(--warning); }
+  .dot-success { background: var(--success); } .dot-neutral { background: var(--border-strong); }
 
   .task-body { flex: 1; min-width: 0; }
   .task-name { font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .task-due { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
 
   .badge { font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: 99px; flex-shrink: 0; }
-  .badge-danger { background: var(--danger-bg); color: var(--danger-text); }
+  .badge-danger  { background: var(--danger-bg);  color: var(--danger-text); }
   .badge-warning { background: var(--warning-bg); color: var(--warning-text); }
   .badge-success { background: var(--success-bg); color: var(--success-text); }
-  .badge-neutral { background: var(--surface-2); color: var(--text-muted); border: 1px solid var(--border); }
+  .badge-neutral { background: var(--surface-2);  color: var(--text-muted); border: 1px solid var(--border); }
 
-  .del-btn {
-    background: none; border: none; cursor: pointer;
-    color: var(--text-muted); padding: 4px; border-radius: 4px;
-    display: flex; align-items: center; transition: color 0.1s;
-  }
+  .del-btn { background: none; border: none; cursor: pointer; color: var(--text-muted); padding: 4px; border-radius: 4px; display: flex; align-items: center; }
   .del-btn:hover { color: var(--danger); }
   .del-btn svg { width: 15px; height: 15px; }
+  .edit-btn { background: none; border: none; cursor: pointer; color: var(--text-muted); padding: 4px; border-radius: 4px; display: flex; align-items: center; }
+  .edit-btn:hover { color: var(--accent); }
+  .edit-btn svg { width: 15px; height: 15px; }
 
-  .empty-state {
-    text-align: center; padding: 2.5rem 1rem; color: var(--text-muted); font-size: 14px;
-    background: var(--surface); border: 1px dashed var(--border); border-radius: var(--radius-lg);
-  }
+  /* ── Edit Modal ── */
+  .edit-modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.4); display: none; align-items: center; justify-content: center; z-index: 150; }
+  .edit-modal-backdrop.open { display: flex; }
+  .edit-modal { background: var(--surface); border-radius: var(--radius-lg); padding: 1.5rem; width: 90%; max-width: 420px; box-shadow: 0 8px 32px rgba(0,0,0,0.15); }
+  .edit-modal-title { font-size: 16px; font-weight: 600; margin-bottom: 1rem; }
+  .edit-field { margin-bottom: 12px; }
+  .edit-field label { font-size: 13px; font-weight: 500; color: var(--text-sub); display: block; margin-bottom: 5px; }
+  .edit-field input { width: 100%; height: 38px; border: 1px solid var(--border); border-radius: var(--radius); padding: 0 12px; font-size: 14px; font-family: inherit; background: var(--surface-2); color: var(--text); outline: none; }
+  .edit-field input:focus { border-color: var(--accent); background: #fff; }
+  .edit-modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 1.25rem; }
+  .btn-cancel { padding: 8px 16px; border-radius: var(--radius); border: 1px solid var(--border-strong); background: none; font-family: inherit; font-size: 13px; cursor: pointer; color: var(--text-sub); }
+  .btn-save { padding: 8px 16px; border-radius: var(--radius); border: none; background: var(--accent); color: #fff; font-family: inherit; font-size: 13px; font-weight: 500; cursor: pointer; }
+
+  .empty-state { text-align: center; padding: 2.5rem 1rem; color: var(--text-muted); font-size: 14px; background: var(--surface); border: 1px dashed var(--border); border-radius: var(--radius-lg); }
   .empty-state p:first-child { font-size: 24px; margin-bottom: 8px; }
 
   /* ── Calendar ── */
-  .cal-header {
-    display: flex; align-items: center; justify-content: space-between;
-    margin-bottom: 1rem;
-  }
-  .cal-nav {
-    display: flex; align-items: center; gap: 12px;
-  }
-  .cal-nav button {
-    width: 32px; height: 32px; border-radius: 50%;
-    border: 1px solid var(--border-strong); background: var(--surface);
-    font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center;
-    color: var(--text-sub); transition: background 0.1s;
-  }
+  .cal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+  .cal-nav { display: flex; align-items: center; gap: 12px; }
+  .cal-nav button { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--border-strong); background: var(--surface); font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text-sub); }
   .cal-nav button:hover { background: var(--surface-2); }
   .cal-month { font-size: 17px; font-weight: 600; min-width: 120px; text-align: center; }
-  .cal-today-btn {
-    padding: 6px 12px; border-radius: var(--radius);
-    border: 1px solid var(--border-strong); background: var(--surface);
-    font-family: inherit; font-size: 13px; cursor: pointer; color: var(--text-sub);
-  }
+  .cal-today-btn { padding: 6px 12px; border-radius: var(--radius); border: 1px solid var(--border-strong); background: var(--surface); font-family: inherit; font-size: 13px; cursor: pointer; color: var(--text-sub); }
   .cal-today-btn:hover { background: var(--surface-2); }
-
-  .cal-grid-head {
-    display: grid; grid-template-columns: repeat(7,1fr);
-    margin-bottom: 4px;
-  }
-  .cal-dow {
-    text-align: center; font-size: 12px; font-weight: 500;
-    color: var(--text-muted); padding: 4px 0;
-  }
-  .cal-dow:first-child { color: var(--danger); }
-  .cal-dow:last-child { color: var(--accent); }
-
+  .cal-grid-head { display: grid; grid-template-columns: repeat(7,1fr); margin-bottom: 4px; }
+  .cal-dow { text-align: center; font-size: 12px; font-weight: 500; color: var(--text-muted); padding: 4px 0; }
+  .cal-dow:first-child { color: var(--danger); } .cal-dow:last-child { color: var(--accent); }
   .cal-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 3px; }
-  .cal-cell {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: var(--radius); min-height: 80px; padding: 6px;
-    transition: border-color 0.1s; cursor: default;
-  }
+  .cal-cell { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); min-height: 80px; padding: 6px; }
   .cal-cell.other-month { background: var(--surface-2); opacity: 0.6; }
   .cal-cell.today { border-color: var(--accent); border-width: 2px; }
   .cal-cell.has-tasks { cursor: pointer; }
   .cal-cell.has-tasks:hover { border-color: var(--border-strong); }
-
-  .cal-day-num {
-    font-size: 12px; font-weight: 500; margin-bottom: 4px;
-    line-height: 1;
-  }
-  .cal-cell.today .cal-day-num {
-    background: var(--accent); color: #fff;
-    width: 20px; height: 20px; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 11px;
-  }
+  .cal-day-num { font-size: 12px; font-weight: 500; margin-bottom: 4px; line-height: 1; }
+  .cal-cell.today .cal-day-num { background: var(--accent); color: #fff; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; }
   .cal-cell:nth-child(7n+1) .cal-day-num { color: var(--danger); }
   .cal-cell:nth-child(7n) .cal-day-num { color: var(--accent); }
-
-  .cal-task-chip {
-    font-size: 10px; padding: 2px 5px; border-radius: 3px;
-    margin-bottom: 2px; white-space: nowrap; overflow: hidden;
-    text-overflow: ellipsis; line-height: 1.4;
-  }
+  .cal-task-chip { font-size: 10px; padding: 2px 5px; border-radius: 3px; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.4; }
   .chip-danger { background: var(--danger-bg); color: var(--danger-text); }
   .chip-warning { background: var(--warning-bg); color: var(--warning-text); }
   .chip-success { background: var(--success-bg); color: var(--success-text); }
   .chip-done { background: var(--surface-2); color: var(--text-muted); text-decoration: line-through; }
-
   .cal-more { font-size: 10px; color: var(--text-muted); margin-top: 1px; }
-
-  /* Day detail panel */
-  .day-detail {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: var(--radius-lg); padding: 1rem 1.25rem;
-    margin-top: 1rem; display: none;
-  }
+  .day-detail { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1rem 1.25rem; margin-top: 1rem; display: none; }
   .day-detail.open { display: block; }
   .day-detail-title { font-size: 14px; font-weight: 600; margin-bottom: 10px; }
   .day-detail-list { display: flex; flex-direction: column; gap: 6px; }
-  .day-detail-item {
-    display: flex; align-items: center; gap: 8px;
-    padding: 8px 10px; border-radius: var(--radius);
-    background: var(--surface-2); border: 1px solid var(--border);
-    font-size: 13px;
-  }
+  .day-detail-item { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: var(--radius); background: var(--surface-2); border: 1px solid var(--border); font-size: 13px; }
   .day-detail-item.done-item { opacity: 0.6; }
   .day-detail-item.done-item span { text-decoration: line-through; }
 
-  /* Toast & Loading */
-  .toast {
-    position: fixed; bottom: 24px; right: 24px;
-    background: var(--text); color: #fff;
-    padding: 10px 18px; border-radius: var(--radius);
-    font-size: 13px; z-index: 200;
-    opacity: 0; transform: translateY(8px); transition: all 0.2s; pointer-events: none;
-  }
+  /* ── Backup Modal ── */
+  .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.4); display: none; align-items: center; justify-content: center; z-index: 100; }
+  .modal-backdrop.open { display: flex; }
+  .modal { background: var(--surface); border-radius: var(--radius-lg); padding: 1.5rem; width: 90%; max-width: 500px; box-shadow: 0 8px 32px rgba(0,0,0,0.15); }
+  .modal-title { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
+  .modal-sub { font-size: 13px; color: var(--text-sub); margin-bottom: 1rem; line-height: 1.6; }
+  .backup-list { max-height: 280px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; margin-bottom: 1rem; }
+  .backup-item { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface-2); font-size: 13px; }
+  .backup-item-info { display: flex; flex-direction: column; gap: 2px; }
+  .backup-item-time { font-weight: 500; }
+  .backup-item-count { font-size: 12px; color: var(--text-muted); }
+  .restore-btn { padding: 4px 12px; border-radius: var(--radius); border: 1px solid var(--accent); background: var(--accent-bg); color: var(--accent-text); font-family: inherit; font-size: 12px; cursor: pointer; }
+  .restore-btn:hover { background: var(--accent); color: #fff; }
+  .modal-close { padding: 8px 16px; border-radius: var(--radius); border: 1px solid var(--border-strong); background: none; font-family: inherit; font-size: 13px; cursor: pointer; color: var(--text-sub); }
+
+  .toast { position: fixed; bottom: 24px; right: 24px; background: var(--text); color: #fff; padding: 10px 18px; border-radius: var(--radius); font-size: 13px; z-index: 200; opacity: 0; transform: translateY(8px); transition: all 0.2s; pointer-events: none; }
   .toast.show { opacity: 1; transform: none; }
-  .loading-overlay {
-    position: fixed; inset: 0; background: rgba(255,255,255,0.7);
-    display: none; align-items: center; justify-content: center;
-    z-index: 300; font-size: 14px; color: var(--text-sub);
-  }
+  .loading-overlay { position: fixed; inset: 0; background: rgba(255,255,255,0.75); display: none; align-items: center; justify-content: center; z-index: 300; font-size: 14px; color: var(--text-sub); flex-direction: column; gap: 8px; }
   .loading-overlay.show { display: flex; }
+  .spinner { width: 24px; height: 24px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
 
   @media (max-width: 520px) {
     .stats { grid-template-columns: repeat(2,1fr); }
@@ -279,7 +190,6 @@
     .add-btn { width: 100%; }
     .cal-cell { min-height: 60px; }
     .cal-task-chip { display: none; }
-    .cal-day-num { font-size: 13px; }
   }
 </style>
 </head>
@@ -291,15 +201,23 @@
       <div class="app-title">업무 관리</div>
       <div class="app-date" id="today-label"></div>
     </div>
-    <button class="sync-btn" onclick="manualSync()">↻ 지금 동기화</button>
+    <div class="header-btns">
+      <button class="icon-btn" onclick="openBackupModal()">🗂 백업 복원</button>
+      <button class="icon-btn" onclick="manualSync()">↻ 동기화</button>
+    </div>
   </div>
 
   <div class="status-bar" id="status-bar">구글 시트와 연동 중...</div>
 
-  <!-- Nav -->
+  <!-- 백업 복원 배너 -->
+  <div class="backup-banner" id="backup-banner">
+    ⚠️ 시트에서 불러온 데이터가 없습니다. 백업에서 복원하시겠어요?
+    <button onclick="restoreLatestBackup()">최근 백업 복원</button>
+  </div>
+
   <div class="nav-tabs">
-    <button class="nav-tab active" onclick="switchView('list', this)">📋 목록</button>
-    <button class="nav-tab" onclick="switchView('calendar', this)">📅 달력</button>
+    <button class="nav-tab active" onclick="switchView('list',this)">📋 목록</button>
+    <button class="nav-tab" onclick="switchView('calendar',this)">📅 달력</button>
   </div>
 
   <!-- LIST VIEW -->
@@ -310,7 +228,6 @@
       <div class="stat"><div class="stat-label">이번 주</div><div class="stat-num c-warning" id="s-week">-</div></div>
       <div class="stat"><div class="stat-label">완료</div><div class="stat-num c-success" id="s-done">-</div></div>
     </div>
-
     <div class="add-card">
       <div class="add-card-title">새 업무 추가</div>
       <div class="add-row">
@@ -319,14 +236,13 @@
         <button class="add-btn" onclick="addTask()">추가</button>
       </div>
     </div>
-
     <div class="filter-tabs">
       <button class="tab-btn active" onclick="setFilter('all',this)">전체</button>
+      <button class="tab-btn" onclick="setFilter('overdue',this)">🚨 마감 초과 <span id="overdue-count" style="background:var(--danger);color:#fff;border-radius:99px;padding:0px 6px;font-size:11px;margin-left:2px;display:none;"></span></button>
       <button class="tab-btn" onclick="setFilter('today',this)">오늘 마감</button>
       <button class="tab-btn" onclick="setFilter('week',this)">이번 주</button>
       <button class="tab-btn" onclick="setFilter('done',this)">완료</button>
     </div>
-
     <div class="task-list" id="task-list"></div>
   </div>
 
@@ -340,15 +256,11 @@
       </div>
       <button class="cal-today-btn" onclick="goToday()">오늘</button>
     </div>
-
     <div class="cal-grid-head">
-      <div class="cal-dow">일</div><div class="cal-dow">월</div>
-      <div class="cal-dow">화</div><div class="cal-dow">수</div>
-      <div class="cal-dow">목</div><div class="cal-dow">금</div>
-      <div class="cal-dow">토</div>
+      <div class="cal-dow">일</div><div class="cal-dow">월</div><div class="cal-dow">화</div>
+      <div class="cal-dow">수</div><div class="cal-dow">목</div><div class="cal-dow">금</div><div class="cal-dow">토</div>
     </div>
     <div class="cal-grid" id="cal-grid"></div>
-
     <div class="day-detail" id="day-detail">
       <div class="day-detail-title" id="day-detail-title"></div>
       <div class="day-detail-list" id="day-detail-list"></div>
@@ -357,14 +269,53 @@
 
 </div>
 
-<div class="loading-overlay" id="loading">⏳ 동기화 중...</div>
+<!-- 편집 모달 -->
+<div class="edit-modal-backdrop" id="edit-modal">
+  <div class="edit-modal">
+    <div class="edit-modal-title">✏️ 업무 편집</div>
+    <div class="edit-field">
+      <label>업무명</label>
+      <input type="text" id="edit-name" placeholder="업무명 입력" />
+    </div>
+    <div class="edit-field">
+      <label>마감일</label>
+      <input type="date" id="edit-due" />
+    </div>
+    <div class="edit-modal-actions">
+      <button class="btn-cancel" onclick="closeEditModal()">취소</button>
+      <button class="btn-save" onclick="saveEdit()">저장</button>
+    </div>
+  </div>
+</div>
+
+<!-- 백업 복원 모달 -->
+<div class="modal-backdrop" id="backup-modal">
+  <div class="modal">
+    <div class="modal-title">🗂 백업 목록</div>
+    <div class="modal-sub">최근 5개 백업이 자동 저장됩니다. 원하는 시점으로 복원할 수 있습니다.</div>
+    <div class="backup-list" id="backup-list"></div>
+    <div style="display:flex;justify-content:flex-end;">
+      <button class="modal-close" onclick="closeBackupModal()">닫기</button>
+    </div>
+  </div>
+</div>
+
+<div class="loading-overlay" id="loading"><div class="spinner"></div>동기화 중...</div>
 <div class="toast" id="toast"></div>
 
 <script>
 const GS_URL = 'https://script.google.com/macros/s/AKfycbz_oRtGbdnS7aYwbhW3cmlik28yBLIpjYjQKzpwXXndAtTj5kNYGaPLhlcdsWD23-sSgQ/exec';
+const BACKUP_KEY = 'task_backups';
+const TASKS_KEY  = 'tasks';
+const MAX_BACKUPS = 5;
 
 const TODAY = new Date(); TODAY.setHours(0,0,0,0);
-const todayStr = TODAY.toISOString().split('T')[0];
+// KST 기준 오늘 날짜 (UTC+9 보정)
+function toKSTDateStr(d) {
+  const kst = new Date(d.getTime() + 9 * 60 * 60 * 1000);
+  return kst.toISOString().split('T')[0];
+}
+const todayStr = toKSTDateStr(TODAY);
 
 document.getElementById('today-label').textContent =
   TODAY.toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric',weekday:'short'});
@@ -375,28 +326,121 @@ document.getElementById('task-input').addEventListener('keydown', e => { if(e.ke
 let tasks = [];
 let filter = 'all';
 let nextId = 1;
-let calYear = TODAY.getFullYear();
-let calMonth = TODAY.getMonth(); // 0-based
+let calYear = TODAY.getFullYear(), calMonth = TODAY.getMonth();
 let selectedDate = null;
-let currentView = 'list';
 
-// ── Data ──
+// ── 날짜 정규화 ──
+function normalizeDate(val) {
+  if (!val) return '';
+  if (/^\d{4}-\d{2}-\d{2}$/.test(val)) return val;
+  const d = new Date(val);
+  if (isNaN(d)) return val;
+  // ISO UTC → 로컬 날짜 보정
+  const offset = d.getTimezoneOffset() * 60000;
+  const local = new Date(d.getTime() + offset);
+  const y = local.getFullYear();
+  const m = String(local.getMonth()+1).padStart(2,'0');
+  const day = String(local.getDate()).padStart(2,'0');
+  return `${y}-${m}-${day}`;
+}
+
+// ── 백업 시스템 ──
+function saveBackup(taskList) {
+  if (!taskList || taskList.length === 0) return; // 빈 데이터는 백업 안 함
+  const backups = JSON.parse(localStorage.getItem(BACKUP_KEY) || '[]');
+  backups.unshift({
+    time: new Date().toLocaleString('ko-KR'),
+    ts: Date.now(),
+    count: taskList.length,
+    data: JSON.parse(JSON.stringify(taskList))
+  });
+  // 최대 5개 유지
+  localStorage.setItem(BACKUP_KEY, JSON.stringify(backups.slice(0, MAX_BACKUPS)));
+}
+
+function getBackups() {
+  return JSON.parse(localStorage.getItem(BACKUP_KEY) || '[]');
+}
+
+function restoreFromBackup(index) {
+  const backups = getBackups();
+  if (!backups[index]) return;
+  tasks = backups[index].data.map(t => ({...t, due: normalizeDate(t.due)}));
+  nextId = Math.max(...tasks.map(t => t.id), 0) + 1;
+  renderList(); renderCalendar();
+  closeBackupModal();
+  document.getElementById('backup-banner').classList.remove('show');
+  showToast(`✅ ${backups[index].time} 백업으로 복원됐습니다.`);
+  syncToSheets(true);
+}
+
+function restoreLatestBackup() {
+  restoreFromBackup(0);
+}
+
+function openBackupModal() {
+  const backups = getBackups();
+  const list = document.getElementById('backup-list');
+  if (backups.length === 0) {
+    list.innerHTML = `<div style="text-align:center;padding:1.5rem;color:var(--text-muted);font-size:13px;">저장된 백업이 없습니다.</div>`;
+  } else {
+    list.innerHTML = backups.map((b, i) => `
+      <div class="backup-item">
+        <div class="backup-item-info">
+          <div class="backup-item-time">${b.time}</div>
+          <div class="backup-item-count">업무 ${b.count}건</div>
+        </div>
+        <button class="restore-btn" onclick="restoreFromBackup(${i})">복원</button>
+      </div>`).join('');
+  }
+  document.getElementById('backup-modal').classList.add('open');
+}
+
+function closeBackupModal() {
+  document.getElementById('backup-modal').classList.remove('open');
+}
+
+// ── 데이터 로드 (안전하게) ──
 async function loadFromSheets() {
   setStatus('구글 시트에서 불러오는 중...', '');
   try {
     const res = await fetch(GS_URL + '?t=' + Date.now());
     const data = await res.json();
+
     if (Array.isArray(data) && data.length > 0) {
-      tasks = data.map(t => ({ id: Number(t.id)||nextId++, name:t.name, due:normalizeDate(t.due), done:t.done }));
-      nextId = Math.max(...tasks.map(t=>t.id), 0) + 1;
+      // ✅ 데이터가 있을 때만 교체
+      const loaded = data.map(t => ({
+        id: Number(t.id) || nextId++,
+        name: t.name,
+        due: normalizeDate(t.due),
+        done: t.done
+      }));
+      tasks = loaded;
+      nextId = Math.max(...tasks.map(t => t.id), 0) + 1;
+      saveBackup(tasks); // 정상 로드 시 백업 저장
+      localStorage.setItem(TASKS_KEY, JSON.stringify(tasks));
       setStatus('✅ 구글 시트 연동됨 · ' + new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'}), 'ok');
+      document.getElementById('backup-banner').classList.remove('show');
     } else {
-      setStatus('✅ 연동됨 (데이터 없음)', 'ok');
+      // ⚠️ 시트가 비어있음 → 로컬 데이터 유지, 경고 표시
+      const local = localStorage.getItem(TASKS_KEY);
+      if (local) {
+        tasks = JSON.parse(local).map(t => ({...t, due: normalizeDate(t.due)}));
+        nextId = Math.max(...tasks.map(t => t.id), 0) + 1;
+        setStatus('⚠️ 시트 데이터 없음 · 로컬 데이터 유지 중', 'warn');
+        if (tasks.length > 0) {
+          document.getElementById('backup-banner').classList.add('show');
+        }
+      } else {
+        setStatus('✅ 연동됨 (데이터 없음)', 'ok');
+      }
     }
   } catch(e) {
-    const local = localStorage.getItem('tasks');
+    // ❌ 네트워크 오류 → 로컬 데이터 유지, 덮어쓰기 절대 안 함
+    const local = localStorage.getItem(TASKS_KEY);
     if (local) {
       tasks = JSON.parse(local).map(t => ({...t, due: normalizeDate(t.due)}));
+      nextId = Math.max(...tasks.map(t => t.id), 0) + 1;
     }
     setStatus('⚠️ 오프라인 모드 · 로컬 데이터 사용 중', 'err');
   }
@@ -404,19 +448,26 @@ async function loadFromSheets() {
 }
 
 async function syncToSheets(silent) {
+  if (tasks.length === 0) {
+    // 🛡 빈 배열이면 절대 시트에 쓰지 않음
+    if (!silent) showToast('⚠️ 업무가 없어 동기화를 건너뜁니다.');
+    return;
+  }
   if (!silent) showLoading(true);
   try {
     await fetch(GS_URL, {
-      method:'POST', mode:'no-cors',
-      headers:{'Content-Type':'application/json'},
+      method: 'POST', mode: 'no-cors',
+      headers: {'Content-Type':'application/json'},
       body: JSON.stringify({action:'sync', tasks})
     });
-    localStorage.setItem('tasks', JSON.stringify(tasks));
+    saveBackup(tasks);
+    localStorage.setItem(TASKS_KEY, JSON.stringify(tasks));
     setStatus('✅ 동기화 완료 · ' + new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'}), 'ok');
     if (!silent) showToast('✅ 동기화 완료!');
   } catch(e) {
-    localStorage.setItem('tasks', JSON.stringify(tasks));
+    localStorage.setItem(TASKS_KEY, JSON.stringify(tasks));
     setStatus('⚠️ 동기화 실패 · 로컬에만 저장됨', 'err');
+    if (!silent) showToast('⚠️ 동기화 실패. 로컬에만 저장됩니다.');
   }
   if (!silent) showLoading(false);
 }
@@ -429,21 +480,6 @@ async function manualSync() {
 }
 
 // ── Helpers ──
-// 날짜를 항상 YYYY-MM-DD 문자열로 정규화
-function normalizeDate(val) {
-  if (!val) return '';
-  // 이미 YYYY-MM-DD 형식이면 그대로
-  if (/^\d{4}-\d{2}-\d{2}$/.test(val)) return val;
-  // ISO 문자열(T 포함) → 로컬 날짜로 변환
-  const d = new Date(val);
-  if (isNaN(d)) return val;
-  // UTC 기준이 아닌 로컬 날짜로 추출
-  const y = d.getFullYear();
-  const m = String(d.getMonth()+1).padStart(2,'0');
-  const day = String(d.getDate()).padStart(2,'0');
-  return `${y}-${m}-${day}`;
-}
-
 function daysLeft(due) {
   const d = new Date(due); d.setHours(0,0,0,0);
   return Math.round((d - TODAY) / 86400000);
@@ -459,21 +495,16 @@ function getBadge(task) {
 function getDot(task) {
   if (task.done) return 'dot-neutral';
   const d = daysLeft(task.due);
-  if (d <= 0) return 'dot-danger';
-  if (d <= 3) return 'dot-warning';
-  return 'dot-success';
+  if (d <= 0) return 'dot-danger'; if (d <= 3) return 'dot-warning'; return 'dot-success';
 }
 function getChipClass(task) {
   if (task.done) return 'chip-done';
   const d = daysLeft(task.due);
-  if (d <= 0) return 'chip-danger';
-  if (d <= 3) return 'chip-warning';
-  return 'chip-success';
+  if (d <= 0) return 'chip-danger'; if (d <= 3) return 'chip-warning'; return 'chip-success';
 }
 
 // ── Views ──
 function switchView(view, btn) {
-  currentView = view;
   document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   document.getElementById('view-list').style.display = view === 'list' ? '' : 'none';
@@ -481,16 +512,14 @@ function switchView(view, btn) {
   if (view === 'calendar') renderCalendar();
 }
 
-// ── List View ──
+// ── List ──
 function getFiltered() {
   const active = tasks.filter(t => !t.done);
-  if (filter === 'today') return active.filter(t => daysLeft(t.due) <= 0);
+  if (filter === 'overdue') return active.filter(t => daysLeft(t.due) < 0).sort((a,b) => daysLeft(a.due)-daysLeft(b.due));
+  if (filter === 'today') return active.filter(t => daysLeft(t.due) === 0);
   if (filter === 'week')  return active.filter(t => daysLeft(t.due) > 0 && daysLeft(t.due) <= 7);
   if (filter === 'done')  return tasks.filter(t => t.done);
-  return [...tasks].sort((a,b) => {
-    if (a.done !== b.done) return a.done ? 1 : -1;
-    return daysLeft(a.due) - daysLeft(b.due);
-  });
+  return [...tasks].sort((a,b) => { if (a.done !== b.done) return a.done?1:-1; return daysLeft(a.due)-daysLeft(b.due); });
 }
 
 function renderList() {
@@ -512,7 +541,10 @@ function renderList() {
           <div class="task-due">📅 ${due}</div>
         </div>
         <span class="badge ${b.cls}">${b.label}</span>
-        <button class="del-btn" onclick="del(${t.id})">
+        <button class="edit-btn" onclick="openEditModal(${t.id})" title="편집">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        </button>
+        <button class="del-btn" onclick="del(${t.id})" title="삭제">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
         </button>
       </div>`;
@@ -523,6 +555,9 @@ function renderList() {
   document.getElementById('s-today').textContent = active.filter(t => daysLeft(t.due) <= 0).length;
   document.getElementById('s-week').textContent  = active.filter(t => daysLeft(t.due) > 0 && daysLeft(t.due) <= 7).length;
   document.getElementById('s-done').textContent  = tasks.filter(t => t.done).length;
+  const overdueCount = active.filter(t => daysLeft(t.due) < 0).length;
+  const badge = document.getElementById('overdue-count');
+  if (overdueCount > 0) { badge.textContent = overdueCount; badge.style.display = 'inline'; } else { badge.style.display = 'none'; }
 }
 
 function addTask() {
@@ -543,11 +578,43 @@ function toggle(id) {
 }
 
 function del(id) {
+  if (!confirm('이 업무를 삭제하시겠어요?')) return;
   tasks = tasks.filter(t => t.id !== id);
   renderList(); renderCalendar();
   showToast('업무를 삭제했습니다.');
   syncToSheets(true);
 }
+
+let editingId = null;
+function openEditModal(id) {
+  const t = tasks.find(t => t.id === id);
+  if (!t) return;
+  editingId = id;
+  document.getElementById('edit-name').value = t.name;
+  document.getElementById('edit-due').value = t.due;
+  document.getElementById('edit-modal').classList.add('open');
+  setTimeout(() => document.getElementById('edit-name').focus(), 100);
+}
+function closeEditModal() {
+  editingId = null;
+  document.getElementById('edit-modal').classList.remove('open');
+}
+function saveEdit() {
+  const name = document.getElementById('edit-name').value.trim();
+  const due  = document.getElementById('edit-due').value;
+  if (!name) { showToast('업무명을 입력해 주세요.'); return; }
+  if (!due)  { showToast('마감일을 선택해 주세요.'); return; }
+  const t = tasks.find(t => t.id === editingId);
+  if (t) { t.name = name; t.due = normalizeDate(due); }
+  closeEditModal();
+  renderList(); renderCalendar();
+  showToast('✅ 업무가 수정됐습니다.');
+  syncToSheets(true);
+}
+// Enter 키로 저장
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { closeEditModal(); closeBackupModal(); }
+});
 
 function setFilter(f, btn) {
   filter = f;
@@ -556,85 +623,57 @@ function setFilter(f, btn) {
   renderList();
 }
 
-// ── Calendar View ──
+// ── Calendar ──
 function renderCalendar() {
-  const label = document.getElementById('cal-month-label');
-  label.textContent = `${calYear}년 ${calMonth+1}월`;
-
-  const firstDay = new Date(calYear, calMonth, 1).getDay(); // 0=Sun
+  document.getElementById('cal-month-label').textContent = `${calYear}년 ${calMonth+1}월`;
+  const firstDay = new Date(calYear, calMonth, 1).getDay();
   const daysInMonth = new Date(calYear, calMonth+1, 0).getDate();
   const daysInPrev  = new Date(calYear, calMonth, 0).getDate();
 
-  // Build task map: due date string → tasks[]
   const taskMap = {};
   tasks.forEach(t => {
-    if (!taskMap[t.due]) taskMap[t.due] = [];
-    taskMap[t.due].push(t);
+    const key = t.due;
+    if (!taskMap[key]) taskMap[key] = [];
+    taskMap[key].push(t);
   });
 
-  const grid = document.getElementById('cal-grid');
+  const totalCells = Math.ceil((firstDay + daysInMonth) / 7) * 7;
   let cells = '';
-  let totalCells = Math.ceil((firstDay + daysInMonth) / 7) * 7;
-
   for (let i = 0; i < totalCells; i++) {
     let day, month, year, isOther = false;
     if (i < firstDay) {
-      day = daysInPrev - firstDay + i + 1;
-      month = calMonth - 1; year = calYear;
-      if (month < 0) { month = 11; year--; }
-      isOther = true;
+      day = daysInPrev - firstDay + i + 1; month = calMonth-1; year = calYear;
+      if (month < 0) { month = 11; year--; } isOther = true;
     } else if (i >= firstDay + daysInMonth) {
-      day = i - firstDay - daysInMonth + 1;
-      month = calMonth + 1; year = calYear;
-      if (month > 11) { month = 0; year++; }
-      isOther = true;
+      day = i - firstDay - daysInMonth + 1; month = calMonth+1; year = calYear;
+      if (month > 11) { month = 0; year++; } isOther = true;
     } else {
-      day = i - firstDay + 1;
-      month = calMonth; year = calYear;
+      day = i - firstDay + 1; month = calMonth; year = calYear;
     }
-
     const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
     const isToday = dateStr === todayStr;
     const dayTasks = taskMap[dateStr] || [];
-    const hasTasks = dayTasks.length > 0;
-
     const chips = dayTasks.slice(0,2).map(t =>
-      `<div class="cal-task-chip ${getChipClass(t)}">${t.name}</div>`
-    ).join('');
+      `<div class="cal-task-chip ${getChipClass(t)}">${t.name}</div>`).join('');
     const more = dayTasks.length > 2 ? `<div class="cal-more">+${dayTasks.length-2}개 더</div>` : '';
-
-    cells += `<div class="cal-cell${isOther?' other-month':''}${isToday?' today':''}${hasTasks?' has-tasks':''}"
-      onclick="selectDay('${dateStr}')">
-      <div class="cal-day-num">${day}</div>
-      ${chips}${more}
-    </div>`;
+    cells += `<div class="cal-cell${isOther?' other-month':''}${isToday?' today':''}${dayTasks.length>0?' has-tasks':''}" onclick="selectDay('${dateStr}')">
+      <div class="cal-day-num">${day}</div>${chips}${more}</div>`;
   }
-  grid.innerHTML = cells;
-
-  // Re-render detail if a date is selected
+  document.getElementById('cal-grid').innerHTML = cells;
   if (selectedDate) renderDayDetail(selectedDate);
 }
 
 function selectDay(dateStr) {
   const dayTasks = tasks.filter(t => t.due === dateStr);
-  if (dayTasks.length === 0) {
-    // 날짜 클릭 시 해당 날짜로 업무 추가 폼 자동 세팅
-    selectedDate = null;
-    document.getElementById('day-detail').classList.remove('open');
-    return;
-  }
+  if (dayTasks.length === 0) { selectedDate = null; document.getElementById('day-detail').classList.remove('open'); return; }
   selectedDate = dateStr;
   renderDayDetail(dateStr);
 }
 
 function renderDayDetail(dateStr) {
   const dayTasks = tasks.filter(t => t.due === dateStr);
-  if (dayTasks.length === 0) {
-    document.getElementById('day-detail').classList.remove('open');
-    return;
-  }
-  const d = new Date(dateStr);
-  const formatted = d.toLocaleDateString('ko-KR',{month:'long',day:'numeric',weekday:'short'});
+  if (dayTasks.length === 0) { document.getElementById('day-detail').classList.remove('open'); return; }
+  const formatted = new Date(dateStr).toLocaleDateString('ko-KR',{month:'long',day:'numeric',weekday:'short'});
   document.getElementById('day-detail-title').textContent = `📅 ${formatted} 업무 (${dayTasks.length}건)`;
   document.getElementById('day-detail-list').innerHTML = dayTasks.map(t => {
     const b = getBadge(t);
@@ -657,8 +696,7 @@ function moveMonth(dir) {
 }
 
 function goToday() {
-  calYear = TODAY.getFullYear();
-  calMonth = TODAY.getMonth();
+  calYear = TODAY.getFullYear(); calMonth = TODAY.getMonth();
   selectedDate = null;
   document.getElementById('day-detail').classList.remove('open');
   renderCalendar();
