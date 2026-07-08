@@ -441,12 +441,35 @@ async function loadFromSheets() {
 
   if (Array.isArray(data) && data.length > 0) {
     const loaded = data.map(t => ({
-      id: Number(t.id) || nextId++,
-      name: t.name,
+      id: Number(t.id) || 0,
+      name: String(t.name || '').trim(),
       due: normalizeDate(t.due),
       done: t.done
-    }));
-    tasks = loaded;
+    })).filter(t => t.name); // 이름 없는 행 제거
+
+    // ID 중복 제거: 같은 ID면 첫 번째만 유지
+    const seenIds = new Set();
+    const deduped = [];
+    let tempId = 1;
+    loaded.forEach(t => {
+      if (t.id === 0 || seenIds.has(t.id)) {
+        // ID 없거나 중복이면 새 ID 부여
+        while (seenIds.has(tempId)) tempId++;
+        t.id = tempId++;
+      }
+      seenIds.add(t.id);
+      deduped.push(t);
+    });
+
+    // 이름+날짜 완전 중복 행 제거
+    const seen = new Set();
+    tasks = deduped.filter(t => {
+      const key = `${t.name}__${t.due}`;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+
     nextId = Math.max(...tasks.map(t => t.id), 0) + 1;
     saveBackup(tasks);
     localStorage.setItem(TASKS_KEY, JSON.stringify(tasks));
@@ -467,14 +490,18 @@ async function loadFromSheets() {
   renderList(); renderCalendar();
 }
 
+let isSyncing = false;
+
 async function syncToSheets(silent) {
   if (tasks.length === 0) {
     if (!silent) showToast('⚠️ 업무가 없어 동기화를 건너뜁니다.');
     return;
   }
+  if (isSyncing) return; // 동시 실행 방지
+  isSyncing = true;
   if (!silent) showLoading(true);
 
-  // 로컬에 먼저 저장 (네트워크 실패해도 안전)
+  // 로컬에 먼저 저장
   saveBackup(tasks);
   localStorage.setItem(TASKS_KEY, JSON.stringify(tasks));
 
@@ -486,7 +513,6 @@ async function syncToSheets(silent) {
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({action: 'sync', tasks})
       });
-      // no-cors 제거 → 응답 확인 가능
       if (res.ok || res.type === 'opaque') { success = true; break; }
       throw new Error('HTTP ' + res.status);
     } catch(e) {
@@ -502,6 +528,7 @@ async function syncToSheets(silent) {
     if (!silent) showToast('⚠️ 시트 연결 실패. 로컬에는 저장됐습니다.');
   }
   if (!silent) showLoading(false);
+  isSyncing = false;
 }
 
 async function manualSync() {
