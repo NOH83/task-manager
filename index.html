@@ -304,7 +304,7 @@
 <div class="toast" id="toast"></div>
 
 <script>
-const GS_URL = 'https://script.google.com/macros/s/AKfycbz_oRtGbdnS7aYwbhW3cmlik28yBLIpjYjQKzpwXXndAtTj5kNYGaPLhlcdsWD23-sSgQ/exec';
+const GS_URL = 'https://script.google.com/macros/s/AKfycbyDrhqQY7DiNqA2WBwn_2etfD8XQZ9pFmhjPE5yxYejLQI7wLusSSNGWxF5dKvDgVB8pA/exec';
 const BACKUP_KEY = 'task_backups';
 const TASKS_KEY  = 'tasks';
 const MAX_BACKUPS = 5;
@@ -332,15 +332,27 @@ let selectedDate = null;
 // ── 날짜 정규화 ──
 function normalizeDate(val) {
   if (!val) return '';
+  // 이미 YYYY-MM-DD 형식이면 그대로
   if (/^\d{4}-\d{2}-\d{2}$/.test(val)) return val;
+  // ISO 문자열(T 포함) → KST 기준 날짜 추출
+  // "2026-07-06T15:00:00.000Z" → KST +9h → "2026-07-07 00:00" → "2026-07-07"
+  if (typeof val === 'string' && val.includes('T')) {
+    const d = new Date(val);
+    if (isNaN(d)) return val;
+    // UTC 시간에 +9시간 더해서 KST 날짜 추출
+    const kst = new Date(d.getTime() + 9 * 60 * 60 * 1000);
+    const y = kst.getUTCFullYear();
+    const m = String(kst.getUTCMonth()+1).padStart(2,'0');
+    const day = String(kst.getUTCDate()).padStart(2,'0');
+    return `${y}-${m}-${day}`;
+  }
+  // 그 외 형식 시도
   const d = new Date(val);
   if (isNaN(d)) return val;
-  // ISO UTC → 로컬 날짜 보정
-  const offset = d.getTimezoneOffset() * 60000;
-  const local = new Date(d.getTime() + offset);
-  const y = local.getFullYear();
-  const m = String(local.getMonth()+1).padStart(2,'0');
-  const day = String(local.getDate()).padStart(2,'0');
+  const kst = new Date(d.getTime() + 9 * 60 * 60 * 1000);
+  const y = kst.getUTCFullYear();
+  const m = String(kst.getUTCMonth()+1).padStart(2,'0');
+  const day = String(kst.getUTCDate()).padStart(2,'0');
   return `${y}-${m}-${day}`;
 }
 
@@ -403,71 +415,91 @@ function closeBackupModal() {
 // ── 데이터 로드 (안전하게) ──
 async function loadFromSheets() {
   setStatus('구글 시트에서 불러오는 중...', '');
-  try {
-    const res = await fetch(GS_URL + '?t=' + Date.now());
-    const data = await res.json();
-
-    if (Array.isArray(data) && data.length > 0) {
-      // ✅ 데이터가 있을 때만 교체
-      const loaded = data.map(t => ({
-        id: Number(t.id) || nextId++,
-        name: t.name,
-        due: normalizeDate(t.due),
-        done: t.done
-      }));
-      tasks = loaded;
-      nextId = Math.max(...tasks.map(t => t.id), 0) + 1;
-      saveBackup(tasks); // 정상 로드 시 백업 저장
-      localStorage.setItem(TASKS_KEY, JSON.stringify(tasks));
-      setStatus('✅ 구글 시트 연동됨 · ' + new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'}), 'ok');
-      document.getElementById('backup-banner').classList.remove('show');
-    } else {
-      // ⚠️ 시트가 비어있음 → 로컬 데이터 유지, 경고 표시
-      const local = localStorage.getItem(TASKS_KEY);
-      if (local) {
-        tasks = JSON.parse(local).map(t => ({...t, due: normalizeDate(t.due)}));
-        nextId = Math.max(...tasks.map(t => t.id), 0) + 1;
-        setStatus('⚠️ 시트 데이터 없음 · 로컬 데이터 유지 중', 'warn');
-        if (tasks.length > 0) {
-          document.getElementById('backup-banner').classList.add('show');
+  let data = null;
+  // 최대 3회 재시도
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    try {
+      const res = await fetch(GS_URL + '?t=' + Date.now(), {cache: 'no-store'});
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      data = await res.json();
+      break; // 성공 시 루프 탈출
+    } catch(e) {
+      if (attempt === 3) {
+        // 3회 모두 실패 → 로컬 데이터 유지
+        const local = localStorage.getItem(TASKS_KEY);
+        if (local) {
+          tasks = JSON.parse(local).map(t => ({...t, due: normalizeDate(t.due)}));
+          nextId = Math.max(...tasks.map(t => t.id), 0) + 1;
         }
-      } else {
-        setStatus('✅ 연동됨 (데이터 없음)', 'ok');
+        setStatus('⚠️ 오프라인 모드 · 로컬 데이터 사용 중 (재시도 3회 실패)', 'err');
+        renderList(); renderCalendar();
+        return;
       }
+      await new Promise(r => setTimeout(r, 1000 * attempt)); // 1초, 2초 대기 후 재시도
     }
-  } catch(e) {
-    // ❌ 네트워크 오류 → 로컬 데이터 유지, 덮어쓰기 절대 안 함
+  }
+
+  if (Array.isArray(data) && data.length > 0) {
+    const loaded = data.map(t => ({
+      id: Number(t.id) || nextId++,
+      name: t.name,
+      due: normalizeDate(t.due),
+      done: t.done
+    }));
+    tasks = loaded;
+    nextId = Math.max(...tasks.map(t => t.id), 0) + 1;
+    saveBackup(tasks);
+    localStorage.setItem(TASKS_KEY, JSON.stringify(tasks));
+    setStatus('✅ 구글 시트 연동됨 · ' + new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'}), 'ok');
+    document.getElementById('backup-banner').classList.remove('show');
+  } else {
+    // 시트 비어있음 → 로컬 유지, 덮어쓰기 금지
     const local = localStorage.getItem(TASKS_KEY);
     if (local) {
       tasks = JSON.parse(local).map(t => ({...t, due: normalizeDate(t.due)}));
       nextId = Math.max(...tasks.map(t => t.id), 0) + 1;
+      setStatus('⚠️ 시트 데이터 없음 · 로컬 데이터 유지 중', 'warn');
+      if (tasks.length > 0) document.getElementById('backup-banner').classList.add('show');
+    } else {
+      setStatus('✅ 연동됨 (데이터 없음)', 'ok');
     }
-    setStatus('⚠️ 오프라인 모드 · 로컬 데이터 사용 중', 'err');
   }
   renderList(); renderCalendar();
 }
 
 async function syncToSheets(silent) {
   if (tasks.length === 0) {
-    // 🛡 빈 배열이면 절대 시트에 쓰지 않음
     if (!silent) showToast('⚠️ 업무가 없어 동기화를 건너뜁니다.');
     return;
   }
   if (!silent) showLoading(true);
-  try {
-    await fetch(GS_URL, {
-      method: 'POST', mode: 'no-cors',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({action:'sync', tasks})
-    });
-    saveBackup(tasks);
-    localStorage.setItem(TASKS_KEY, JSON.stringify(tasks));
+
+  // 로컬에 먼저 저장 (네트워크 실패해도 안전)
+  saveBackup(tasks);
+  localStorage.setItem(TASKS_KEY, JSON.stringify(tasks));
+
+  let success = false;
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    try {
+      const res = await fetch(GS_URL, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({action: 'sync', tasks})
+      });
+      // no-cors 제거 → 응답 확인 가능
+      if (res.ok || res.type === 'opaque') { success = true; break; }
+      throw new Error('HTTP ' + res.status);
+    } catch(e) {
+      if (attempt < 3) await new Promise(r => setTimeout(r, 800 * attempt));
+    }
+  }
+
+  if (success) {
     setStatus('✅ 동기화 완료 · ' + new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'}), 'ok');
     if (!silent) showToast('✅ 동기화 완료!');
-  } catch(e) {
-    localStorage.setItem(TASKS_KEY, JSON.stringify(tasks));
-    setStatus('⚠️ 동기화 실패 · 로컬에만 저장됨', 'err');
-    if (!silent) showToast('⚠️ 동기화 실패. 로컬에만 저장됩니다.');
+  } else {
+    setStatus('⚠️ 시트 동기화 실패 · 로컬에 저장됨 (재시도 3회)', 'err');
+    if (!silent) showToast('⚠️ 시트 연결 실패. 로컬에는 저장됐습니다.');
   }
   if (!silent) showLoading(false);
 }
